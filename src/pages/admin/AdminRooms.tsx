@@ -550,7 +550,6 @@ const AdminRooms: React.FC = () => {
                             </td>
                             <td className="py-4 px-6">
                               <div className="flex items-center gap-2">
-                                <DollarSign className="w-4 h-4 text-amber-500" />
                                 <span className="font-bold">₹{room.price}</span>
                                 <span className="text-sm text-muted-foreground">/night</span>
                               </div>

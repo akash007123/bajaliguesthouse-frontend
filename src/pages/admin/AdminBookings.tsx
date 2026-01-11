@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Booking } from '@/types';
 import { StatusBadge } from '@/components/common/StatusBadge';
+import ViewBookingModal from '@/components/common/ViewBookingModal';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -10,22 +11,21 @@ import { toast } from 'sonner';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
-import { 
-  Search, 
-  Filter, 
-  Calendar, 
-  User, 
-  Building, 
-  DollarSign, 
-  CheckCircle, 
-  XCircle, 
+import {
+  Search,
+  Filter,
+  Calendar,
+  User,
+  Building,
+  CheckCircle,
+  XCircle,
   Eye,
   Download,
   RefreshCw,
   AlertCircle,
   MoreVertical
 } from 'lucide-react';
-import { 
+import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -325,7 +325,6 @@ const AdminBookings: React.FC = () => {
                         </td>
                         <td className="py-4 px-6">
                           <div className="flex items-center gap-2">
-                            <DollarSign className="w-4 h-4 text-amber-500" />
                             <span className="font-bold">₹{booking.totalPrice.toLocaleString()}</span>
                           </div>
                         </td>
@@ -333,60 +332,59 @@ const AdminBookings: React.FC = () => {
                           <StatusBadge status={booking.status} />
                         </td>
                         <td className="py-4 px-6">
-                          <div className="flex items-center gap-2">
-                            {(booking.status === 'Pending' || booking.status === 'New') && (
-                              <>
-                                <Button
-                                  size="sm"
-                                  className="gap-1 bg-emerald-500 hover:bg-emerald-600"
-                                  onClick={() => updateBookingStatus(booking.id, 'Approved')}
-                                  disabled={updateStatusMutation.isPending}
-                                >
-                                  <CheckCircle className="w-3 h-3" />
-                                  Approve
-                                </Button>
-                                <Button
-                                  size="sm"
-                                  variant="destructive"
-                                  className="gap-1"
-                                  onClick={() => updateBookingStatus(booking.id, 'Cancelled')}
-                                  disabled={updateStatusMutation.isPending}
-                                >
-                                  <XCircle className="w-3 h-3" />
-                                  Cancel
-                                </Button>
-                              </>
-                            )}
-                            <DropdownMenu>
-                              <DropdownMenuTrigger asChild>
-                                <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                                  <MoreVertical className="w-4 h-4" />
-                                </Button>
-                              </DropdownMenuTrigger>
-                              <DropdownMenuContent align="end">
-                                <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                                <DropdownMenuSeparator />
-                                <DropdownMenuItem className="gap-2">
-                                  <Eye className="w-4 h-4" />
-                                  View Details
-                                </DropdownMenuItem>
-                                <DropdownMenuItem className="gap-2 text-emerald-600">
-                                  <CheckCircle className="w-4 h-4" />
-                                  Mark as Complete
-                                </DropdownMenuItem>
-                                <DropdownMenuItem className="gap-2 text-blue-600">
-                                  <Calendar className="w-4 h-4" />
-                                  Reschedule
-                                </DropdownMenuItem>
-                                <DropdownMenuSeparator />
-                                <DropdownMenuItem className="gap-2 text-rose-600">
-                                  <XCircle className="w-4 h-4" />
-                                  Cancel Booking
-                                </DropdownMenuItem>
-                              </DropdownMenuContent>
-                            </DropdownMenu>
-                          </div>
-                        </td>
+                           <div className="flex items-center gap-2">
+                             {(booking.status === 'Pending' || booking.status === 'New') && (
+                               <>
+                                 <Button
+                                   size="sm"
+                                   className="gap-1 bg-emerald-500 hover:bg-emerald-600"
+                                   onClick={() => updateBookingStatus(booking.id, 'Approved')}
+                                   disabled={updateStatusMutation.isPending}
+                                 >
+                                   <CheckCircle className="w-3 h-3" />
+                                   Approve
+                                 </Button>
+                                 <Button
+                                   size="sm"
+                                   variant="destructive"
+                                   className="gap-1"
+                                   onClick={() => updateBookingStatus(booking.id, 'Cancelled')}
+                                   disabled={updateStatusMutation.isPending}
+                                 >
+                                   <XCircle className="w-3 h-3" />
+                                   Cancel
+                                 </Button>
+                               </>
+                             )}
+                             <Button variant="ghost" size="sm" className="h-8 w-8 p-0" onClick={() => setSelectedBooking(booking)}>
+                               <Eye className="w-4 h-4" />
+                             </Button>
+                             <DropdownMenu>
+                               <DropdownMenuTrigger asChild>
+                                 <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                                   <MoreVertical className="w-4 h-4" />
+                                 </Button>
+                               </DropdownMenuTrigger>
+                               <DropdownMenuContent align="end">
+                                 <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                                 <DropdownMenuSeparator />
+                                 <DropdownMenuItem className="gap-2 text-emerald-600" onClick={() => updateBookingStatus(booking.id, 'Completed')}>
+                                   <CheckCircle className="w-4 h-4" />
+                                   Mark as Complete
+                                 </DropdownMenuItem>
+                                 <DropdownMenuItem className="gap-2 text-blue-600">
+                                   <Calendar className="w-4 h-4" />
+                                   Reschedule
+                                 </DropdownMenuItem>
+                                 <DropdownMenuSeparator />
+                                 <DropdownMenuItem className="gap-2 text-rose-600">
+                                   <XCircle className="w-4 h-4" />
+                                   Cancel Booking
+                                 </DropdownMenuItem>
+                               </DropdownMenuContent>
+                             </DropdownMenu>
+                           </div>
+                         </td>
                       </motion.tr>
                     ))}
                   </AnimatePresence>
@@ -425,6 +423,13 @@ const AdminBookings: React.FC = () => {
             )}
           </motion.div>
         )}
+
+        {/* View Booking Modal */}
+        <ViewBookingModal
+          booking={selectedBooking}
+          isOpen={!!selectedBooking}
+          onClose={() => setSelectedBooking(null)}
+        />
       </motion.div>
     </motion.div>
   );

@@ -23,6 +23,7 @@ export interface Booking {
   userId: string;
   userName: string;
   userEmail: string;
+  userMobile?: string;
   checkIn: string;
   checkOut: string;
   guests: number;

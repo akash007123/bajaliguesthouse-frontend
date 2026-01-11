@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Calendar, BedDouble, DollarSign, Users, TrendingUp, Eye, AlertCircle, CheckCircle, Clock } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
@@ -10,9 +10,14 @@ import { Booking, Room } from '@/types';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Badge } from '@/components/ui/badge';
+import ViewBookingModal from '@/components/common/ViewBookingModal';
 
 const AdminDashboard: React.FC = () => {
   const { user } = useAuth();
+
+  const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const { data: bookings = [], isLoading: bookingsLoading } = useQuery<Booking[]>({
     queryKey: ['adminBookings'],
@@ -227,11 +232,9 @@ const AdminDashboard: React.FC = () => {
                           <StatusBadge status={booking.status} />
                         </td>
                         <td className="py-3 px-4">
-                          <Link to={`/admin/dashboard/bookings/${booking.id}`}>
-                            <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                              <Eye className="w-4 h-4" />
-                            </Button>
-                          </Link>
+                          <Button variant="ghost" size="sm" className="h-8 w-8 p-0" onClick={() => { setSelectedBooking(booking); setIsModalOpen(true); }}>
+                            <Eye className="w-4 h-4" />
+                          </Button>
                         </td>
                       </motion.tr>
                     ))}
@@ -365,7 +368,10 @@ const AdminDashboard: React.FC = () => {
           </Card>
         </motion.div>
       </div>
+      <ViewBookingModal booking={selectedBooking} isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+
     </motion.div>
+
   );
 };
 
