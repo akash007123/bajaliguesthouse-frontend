@@ -55,7 +55,7 @@ const BookingHistory: React.FC = () => {
                   <td className="py-4 px-6 text-sm">{booking.roomName}</td>
                   <td className="py-4 px-6 text-sm">{new Date(booking.checkIn).toLocaleDateString()}</td>
                   <td className="py-4 px-6 text-sm">{new Date(booking.checkOut).toLocaleDateString()}</td>
-                  <td className="py-4 px-6 text-sm font-medium">${booking.totalPrice}</td>
+                  <td className="py-4 px-6 text-sm font-medium">₹{booking.totalPrice}</td>
                   <td className="py-4 px-6"><StatusBadge status={booking.status} /></td>
                   <td className="py-4 px-6">
                     {booking.status !== 'Cancelled' && (

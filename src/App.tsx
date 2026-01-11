@@ -7,6 +7,7 @@ import { AuthProvider } from "./context/AuthContext";
 import { PublicLayout } from "./components/layout/PublicLayout";
 import { DashboardLayout } from "./components/layout/DashboardLayout";
 import { ProtectedRoute } from "./components/common/ProtectedRoute";
+import { UnauthenticatedRoute } from "./components/common/UnauthenticatedRoute";
 
 // Public Pages
 import Home from "./pages/public/Home";
@@ -54,10 +55,10 @@ const App = () => (
             </Route>
 
             {/* Auth Routes */}
-            <Route path="/login" element={<UserLogin />} />
-            <Route path="/signup" element={<UserSignup />} />
-            <Route path="/admin/login" element={<AdminLogin />} />
-            <Route path="/admin/signup" element={<AdminSignup />} />
+            <Route path="/login" element={<UnauthenticatedRoute><UserLogin /></UnauthenticatedRoute>} />
+            <Route path="/signup" element={<UnauthenticatedRoute><UserSignup /></UnauthenticatedRoute>} />
+            <Route path="/admin/login" element={<UnauthenticatedRoute><AdminLogin /></UnauthenticatedRoute>} />
+            <Route path="/admin/signup" element={<UnauthenticatedRoute><AdminSignup /></UnauthenticatedRoute>} />
 
             {/* User Dashboard Routes */}
             <Route path="/user/dashboard" element={<ProtectedRoute allowedRole="user"><DashboardLayout /></ProtectedRoute>}>

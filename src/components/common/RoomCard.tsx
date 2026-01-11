@@ -72,11 +72,11 @@ export const RoomCard: React.FC<RoomCardProps> = ({ room, index = 0 }) => {
           <div>
             {hasDiscount ? (
               <div className="flex items-center gap-2">
-                <span className="text-2xl font-bold text-gold">${room.discountPrice}</span>
-                <span className="text-sm text-muted-foreground line-through">${room.price}</span>
+                <span className="text-2xl font-bold text-gold">₹{room.discountPrice}</span>
+                <span className="text-sm text-muted-foreground line-through">₹{room.price}</span>
               </div>
             ) : (
-              <span className="text-2xl font-bold text-gold">${room.price}</span>
+              <span className="text-2xl font-bold text-gold">₹{room.price}</span>
             )}
             <span className="text-sm text-muted-foreground">/night</span>
           </div>

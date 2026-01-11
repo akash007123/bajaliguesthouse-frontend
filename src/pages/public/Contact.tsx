@@ -79,7 +79,7 @@ const Contact: React.FC = () => {
             </h1>
             <p className="text-primary-foreground/80 text-lg max-w-2xl mx-auto">
               Have questions or special requests? Our team is here to help you plan 
-              the perfect stay at Azure Haven Resort.
+              the perfect stay at Shri Balaji .
             </p>
           </motion.div>
         </div>

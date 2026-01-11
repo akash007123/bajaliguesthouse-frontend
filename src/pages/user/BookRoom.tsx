@@ -37,7 +37,7 @@ const BookRoom: React.FC = () => {
 
   const roomOptions = rooms.filter(r => r.available).map(r => ({
     value: r.id,
-    label: `${r.name} - $${r.discountPrice || r.price}/night`
+    label: `${r.name} - ₹${r.discountPrice || r.price}/night`
   }));
 
   const onSubmit = async (data: BookingFormData) => {

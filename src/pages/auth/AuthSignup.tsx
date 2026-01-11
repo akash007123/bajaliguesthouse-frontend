@@ -60,7 +60,7 @@ const AuthSignup: React.FC<AuthSignupProps> = ({ isAdmin = false }) => {
         <div className="bg-card rounded-xl border border-border p-8 shadow-soft">
           <div className="text-center mb-8">
             <Link to="/" className="inline-block mb-4">
-              <span className="font-serif text-2xl font-bold text-primary">Azure Haven</span>
+              <span className="font-serif text-2xl font-bold text-primary">Shri Balaji</span>
             </Link>
             <h1 className="text-2xl font-serif font-bold text-foreground">
               {isAdmin ? 'Admin Registration' : 'Create Account'}

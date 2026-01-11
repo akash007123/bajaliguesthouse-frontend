@@ -71,9 +71,17 @@ export const Navbar: React.FC = () => {
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" className="flex items-center space-x-2">
-                    <div className="w-8 h-8 rounded-full bg-gold/20 flex items-center justify-center">
-                      <User className="w-4 h-4 text-gold" />
-                    </div>
+                    {user?.profilePicture ? (
+                      <img
+                        src={user.profilePicture}
+                        alt="Profile"
+                        className="w-8 h-8 rounded-full object-cover"
+                      />
+                    ) : (
+                      <div className="w-8 h-8 rounded-full bg-gold/20 flex items-center justify-center">
+                        <User className="w-4 h-4 text-gold" />
+                      </div>
+                    )}
                     <span className="text-sm font-medium">{user?.name}</span>
                     <ChevronDown className="w-4 h-4" />
                   </Button>

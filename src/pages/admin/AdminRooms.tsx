@@ -82,7 +82,7 @@ const AdminRooms: React.FC = () => {
                   <td className="py-3 px-4 text-sm">{room.id}</td>
                   <td className="py-3 px-4 text-sm">{room.name}</td>
                   <td className="py-3 px-4 text-sm">{room.type}</td>
-                  <td className="py-3 px-4 text-sm">${room.price}</td>
+                  <td className="py-3 px-4 text-sm">₹{room.price}</td>
                   <td className="py-3 px-4">
                     <Badge variant={room.available ? 'default' : 'secondary'}>
                       {room.available ? 'Available' : 'Occupied'}

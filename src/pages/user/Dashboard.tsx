@@ -20,7 +20,7 @@ const UserDashboard: React.FC = () => {
   const stats = [
     { label: 'Total Bookings', value: bookings.length, icon: Calendar, color: 'text-blue-500' },
     { label: 'Upcoming Stays', value: bookings.filter(b => b.status === 'Approved').length, icon: BedDouble, color: 'text-emerald-500' },
-    { label: 'Total Spent', value: `$${bookings.reduce((sum, b) => sum + b.totalPrice, 0).toLocaleString()}`, icon: DollarSign, color: 'text-gold' },
+    { label: 'Total Spent', value: `₹${bookings.reduce((sum, b) => sum + b.totalPrice, 0).toLocaleString()}`, icon: DollarSign, color: 'text-gold' },
   ];
 
   return (

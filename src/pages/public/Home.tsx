@@ -39,7 +39,7 @@ const Home: React.FC = () => {
         <div className="absolute inset-0">
           <img
             src={heroImage}
-            alt="Azure Haven Resort"
+            alt="Shri Balaji"
             className="w-full h-full object-cover"
           />
           <div className="absolute inset-0 gradient-overlay" />
@@ -221,7 +221,7 @@ const Home: React.FC = () => {
               Ready to Experience Luxury?
             </h2>
             <p className="text-white/80 text-lg mb-8 max-w-2xl mx-auto">
-              Book your stay at Azure Haven Resort and discover a world of unparalleled 
+              Book your stay at Shri Balaji and discover a world of unparalleled 
               comfort and sophistication.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">

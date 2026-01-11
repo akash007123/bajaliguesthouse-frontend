@@ -28,7 +28,7 @@ const About: React.FC = () => {
               Our Story
             </h1>
             <p className="text-primary-foreground/80 text-lg max-w-2xl mx-auto">
-              Discover the legacy of luxury and hospitality that defines Azure Haven Resort
+              Discover the legacy of luxury and hospitality that defines Shri Balaji 
             </p>
           </motion.div>
         </div>
@@ -51,7 +51,7 @@ const About: React.FC = () => {
                 {hotelInfo.description}
               </p>
               <p className="text-muted-foreground leading-relaxed mb-6">
-                Founded with a vision to redefine luxury hospitality, Azure Haven Resort has 
+                Founded with a vision to redefine luxury hospitality, Shri Balaji  has 
                 become a sanctuary for discerning travelers seeking an extraordinary escape. 
                 Our commitment to excellence is reflected in every detail, from our meticulously 
                 designed rooms to our world-class amenities.
@@ -71,7 +71,7 @@ const About: React.FC = () => {
             >
               <img
                 src={heroImage}
-                alt="Azure Haven Resort"
+                alt="Shri Balaji "
                 className="rounded-xl shadow-elegant w-full"
               />
               <div className="absolute -bottom-6 -left-6 bg-gold p-6 rounded-xl shadow-gold">

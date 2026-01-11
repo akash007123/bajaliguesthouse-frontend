@@ -100,7 +100,7 @@ const AdminBookings: React.FC = () => {
                   <td className="py-3 px-4 text-sm">{booking.roomName}</td>
                   <td className="py-3 px-4 text-sm">{new Date(booking.checkIn).toLocaleDateString()}</td>
                   <td className="py-3 px-4 text-sm">{new Date(booking.checkOut).toLocaleDateString()}</td>
-                  <td className="py-3 px-4 text-sm">${booking.totalPrice}</td>
+                  <td className="py-3 px-4 text-sm">₹{booking.totalPrice}</td>
                   <td className="py-3 px-4"><StatusBadge status={booking.status} /></td>
                   <td className="py-3 px-4">
                     {booking.status === 'New' || booking.status === 'Pending' ? (

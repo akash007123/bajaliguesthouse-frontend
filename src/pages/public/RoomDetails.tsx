@@ -119,7 +119,7 @@ const RoomDetails: React.FC = () => {
                 )}
                 {hasDiscount && (
                   <div className="absolute top-4 left-4 bg-destructive text-destructive-foreground px-4 py-2 rounded-lg font-medium">
-                    Save ${room.price - room.discountPrice!}
+                    Save ₹{room.price - room.discountPrice!}
                   </div>
                 )}
               </div>
@@ -182,13 +182,13 @@ const RoomDetails: React.FC = () => {
                 <div className="mb-6">
                   {hasDiscount ? (
                     <div className="flex items-baseline gap-2">
-                      <span className="text-3xl font-bold text-gold">${room.discountPrice}</span>
-                      <span className="text-lg text-muted-foreground line-through">${room.price}</span>
+                      <span className="text-3xl font-bold text-gold">₹{room.discountPrice}</span>
+                      <span className="text-lg text-muted-foreground line-through">₹{room.price}</span>
                       <span className="text-sm text-muted-foreground">/night</span>
                     </div>
                   ) : (
                     <div className="flex items-baseline gap-2">
-                      <span className="text-3xl font-bold text-gold">${room.price}</span>
+                      <span className="text-3xl font-bold text-gold">₹{room.price}</span>
                       <span className="text-sm text-muted-foreground">/night</span>
                     </div>
                   )}

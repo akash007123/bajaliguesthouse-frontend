@@ -191,9 +191,9 @@ export const bookings: Booking[] = [
 ];
 
 export const hotelInfo = {
-  name: 'Azure Haven Resort',
+  name: 'Shri Balaji ',
   tagline: 'Where Luxury Meets Tranquility',
-  description: 'Nestled along the pristine Mediterranean coastline, Azure Haven Resort offers an unparalleled escape into luxury and serenity. Our boutique hotel combines timeless elegance with modern comfort, creating unforgettable experiences for our distinguished guests.',
+  description: 'Nestled along the pristine Mediterranean coastline, Shri Balaji  Resort offers an unparalleled escape into luxury and serenity. Our boutique hotel combines timeless elegance with modern comfort, creating unforgettable experiences for our distinguished guests.',
   address: '123 Coastal Drive, Mediterranean Bay, 12345',
   phone: '+1 (555) 123-4567',
   email: 'reservations@azurehaven.com',

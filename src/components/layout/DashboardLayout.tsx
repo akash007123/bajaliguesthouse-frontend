@@ -63,7 +63,7 @@ export const DashboardLayout: React.FC = () => {
             "font-serif font-bold text-sidebar-foreground transition-all duration-200",
             sidebarOpen ? "text-xl" : "text-sm"
           )}>
-            {sidebarOpen ? 'Azure Haven' : 'AH'}
+            {sidebarOpen ? 'Shri Balaji ' : 'SB'}
           </span>
         </Link>
       </div>
@@ -148,7 +148,7 @@ export const DashboardLayout: React.FC = () => {
       {/* Mobile Header */}
       <div className="md:hidden fixed top-0 left-0 right-0 z-50 bg-sidebar h-16 flex items-center justify-between px-4">
         <Link to="/" className="font-serif font-bold text-sidebar-foreground text-xl">
-          Azure Haven
+          Shri Balaji 
         </Link>
         <button
           onClick={() => setMobileOpen(!mobileOpen)}

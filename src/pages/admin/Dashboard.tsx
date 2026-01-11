@@ -28,7 +28,7 @@ const AdminDashboard: React.FC = () => {
   const stats = [
     { label: 'Total Bookings', value: bookings.length, icon: Calendar, color: 'text-blue-500' },
     { label: 'Available Rooms', value: rooms.filter(r => r.available).length, icon: BedDouble, color: 'text-emerald-500' },
-    { label: 'Revenue', value: `$${bookings.reduce((sum, b) => sum + b.totalPrice, 0).toLocaleString()}`, icon: DollarSign, color: 'text-gold' },
+    { label: 'Revenue', value: `₹${bookings.reduce((sum, b) => sum + b.totalPrice, 0).toLocaleString()}`, icon: DollarSign, color: 'text-gold' },
     { label: 'Pending', value: bookings.filter(b => b.status === 'Pending').length, icon: Users, color: 'text-amber-500' },
   ];
 
@@ -75,7 +75,7 @@ const AdminDashboard: React.FC = () => {
                     <td className="py-3 px-4 text-sm">{booking.id}</td>
                     <td className="py-3 px-4 text-sm">{booking.userName}</td>
                     <td className="py-3 px-4 text-sm">{booking.roomName}</td>
-                    <td className="py-3 px-4 text-sm">${booking.totalPrice}</td>
+                    <td className="py-3 px-4 text-sm">₹{booking.totalPrice}</td>
                     <td className="py-3 px-4"><StatusBadge status={booking.status} /></td>
                   </tr>
                 ))}
