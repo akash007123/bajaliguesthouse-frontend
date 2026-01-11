@@ -94,8 +94,14 @@ export const DashboardLayout: React.FC = () => {
           "flex items-center mb-4",
           sidebarOpen ? "space-x-3" : "justify-center"
         )}>
-          <div className="w-10 h-10 rounded-full bg-sidebar-primary flex items-center justify-center flex-shrink-0">
-            <User className="w-5 h-5 text-sidebar-primary-foreground" />
+          <div className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
+            {user?.profilePicture ? (
+              <img src={user.profilePicture} alt="Profile" className="w-full h-full object-cover" />
+            ) : (
+              <div className="w-full h-full bg-sidebar-primary flex items-center justify-center">
+                <User className="w-5 h-5 text-sidebar-primary-foreground" />
+              </div>
+            )}
           </div>
           {sidebarOpen && (
             <div className="flex-1 min-w-0">

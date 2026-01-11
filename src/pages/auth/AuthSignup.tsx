@@ -13,6 +13,8 @@ import { toast } from 'sonner';
 const signupSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
   email: z.string().email('Please enter a valid email'),
+  mobile: z.string().optional(),
+  address: z.string().optional(),
   password: z.string().min(6, 'Password must be at least 6 characters'),
   confirmPassword: z.string(),
 }).refine((data) => data.password === data.confirmPassword, {
@@ -29,6 +31,7 @@ interface AuthSignupProps {
 const AuthSignup: React.FC<AuthSignupProps> = ({ isAdmin = false }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [profilePicture, setProfilePicture] = useState<File | null>(null);
   const { signup } = useAuth();
   const navigate = useNavigate();
 
@@ -38,7 +41,7 @@ const AuthSignup: React.FC<AuthSignupProps> = ({ isAdmin = false }) => {
 
   const onSubmit = async (data: SignupFormData) => {
     setIsLoading(true);
-    const success = await signup(data.name, data.email, data.password, isAdmin ? 'admin' : 'user');
+    const success = await signup(data.name, data.email, data.password, data.mobile, data.address, profilePicture || undefined, isAdmin ? 'admin' : 'user');
 
     if (success) {
       toast.success('Account created successfully!');
@@ -71,6 +74,21 @@ const AuthSignup: React.FC<AuthSignupProps> = ({ isAdmin = false }) => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <FormInput label="Full Name" placeholder="John Doe" error={errors.name?.message} {...register('name')} required />
               <FormInput label="Email" type="email" placeholder="john@example.com" error={errors.email?.message} {...register('email')} required />
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <FormInput label="Mobile" placeholder="+1234567890" error={errors.mobile?.message} {...register('mobile')} />
+              <FormInput label="Address" placeholder="123 Main St, City, Country" error={errors.address?.message} {...register('address')} />
+            </div>
+
+            <div className="space-y-2">
+              <label className="label-hotel">Profile Picture</label>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => setProfilePicture(e.target.files?.[0] || null)}
+                className="w-full p-2 border border-border rounded-md"
+              />
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
