@@ -38,9 +38,9 @@ const AdminDashboard: React.FC = () => {
         <h1 className="text-3xl font-serif font-bold text-foreground mb-2">Admin Dashboard</h1>
         <p className="text-muted-foreground mb-8">Welcome back, {user?.name}</p>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-8">
           {stats.map((stat) => (
-            <div key={stat.label} className="bg-card rounded-xl border border-border p-6">
+            <div key={stat.label} className="bg-card rounded-xl border border-border p-6 shadow-lg hover:shadow-xl transition-shadow">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-muted-foreground">{stat.label}</p>
@@ -54,7 +54,7 @@ const AdminDashboard: React.FC = () => {
           ))}
         </div>
 
-        <div className="bg-card rounded-xl border border-border p-6">
+        <div className="bg-card rounded-xl border border-border p-6 shadow-lg">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-xl font-serif font-semibold">Recent Bookings</h2>
           </div>
@@ -63,8 +63,8 @@ const AdminDashboard: React.FC = () => {
               <thead>
                 <tr className="border-b border-border">
                   <th className="text-left py-3 px-4 text-sm font-semibold">ID</th>
-                  <th className="text-left py-3 px-4 text-sm font-semibold">Guest</th>
-                  <th className="text-left py-3 px-4 text-sm font-semibold">Room</th>
+                  <th className="text-left py-3 px-4 text-sm font-semibold hidden sm:table-cell">Guest</th>
+                  <th className="text-left py-3 px-4 text-sm font-semibold hidden md:table-cell">Room</th>
                   <th className="text-left py-3 px-4 text-sm font-semibold">Amount</th>
                   <th className="text-left py-3 px-4 text-sm font-semibold">Status</th>
                 </tr>
@@ -73,8 +73,8 @@ const AdminDashboard: React.FC = () => {
                 {bookings.slice(0, 5).map(booking => (
                   <tr key={booking.id} className="border-b border-border">
                     <td className="py-3 px-4 text-sm">{booking.id}</td>
-                    <td className="py-3 px-4 text-sm">{booking.userName}</td>
-                    <td className="py-3 px-4 text-sm">{booking.roomName}</td>
+                    <td className="py-3 px-4 text-sm hidden sm:table-cell">{booking.userName}</td>
+                    <td className="py-3 px-4 text-sm hidden md:table-cell">{booking.roomName}</td>
                     <td className="py-3 px-4 text-sm">₹{booking.totalPrice}</td>
                     <td className="py-3 px-4"><StatusBadge status={booking.status} /></td>
                   </tr>

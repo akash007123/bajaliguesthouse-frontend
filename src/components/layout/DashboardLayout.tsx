@@ -130,7 +130,7 @@ export const DashboardLayout: React.FC = () => {
       {/* Desktop Sidebar */}
       <aside
         className={cn(
-          "hidden md:flex flex-col bg-sidebar transition-all duration-300",
+          "hidden md:flex flex-col bg-sidebar transition-all duration-300 shadow-lg",
           sidebarOpen ? "w-64" : "w-20"
         )}
       >
@@ -174,7 +174,7 @@ export const DashboardLayout: React.FC = () => {
               animate={{ x: 0 }}
               exit={{ x: '-100%' }}
               transition={{ type: 'tween' }}
-              className="md:hidden fixed left-0 top-16 bottom-0 w-64 bg-sidebar z-50 flex flex-col"
+              className="md:hidden fixed left-0 top-16 bottom-0 w-64 bg-sidebar z-50 flex flex-col shadow-xl"
             >
               <NavContent />
             </motion.aside>

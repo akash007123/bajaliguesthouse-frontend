@@ -29,9 +29,9 @@ const UserDashboard: React.FC = () => {
         <h1 className="text-3xl font-serif font-bold text-foreground mb-2">Welcome back, {user?.name}!</h1>
         <p className="text-muted-foreground mb-8">Here's an overview of your bookings</p>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
           {stats.map((stat, i) => (
-            <div key={stat.label} className="bg-card rounded-xl border border-border p-6">
+            <div key={stat.label} className="bg-card rounded-xl border border-border p-6 shadow-lg hover:shadow-xl transition-shadow">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-muted-foreground">{stat.label}</p>
@@ -45,7 +45,7 @@ const UserDashboard: React.FC = () => {
           ))}
         </div>
 
-        <div className="bg-card rounded-xl border border-border p-6">
+        <div className="bg-card rounded-xl border border-border p-6 shadow-lg">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-xl font-serif font-semibold">Recent Bookings</h2>
             <Link to="/user/dashboard/history"><Button variant="ghost" className="text-gold">View All</Button></Link>
