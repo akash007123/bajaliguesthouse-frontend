@@ -19,6 +19,7 @@ export interface Booking {
   id: string;
   roomId: string;
   roomName: string;
+  roomType?: string;
   userId: string;
   userName: string;
   userEmail: string;
@@ -26,9 +27,10 @@ export interface Booking {
   checkOut: string;
   guests: number;
   totalPrice: number;
-  status: 'New' | 'Pending' | 'Approved' | 'Cancelled';
+  status: 'New' | 'Pending' | 'Approved' | 'Cancelled' | 'Completed';
   createdAt: string;
   specialRequests?: string;
+  reviewed?: boolean;
 }
 
 export interface HotelInfo {

@@ -8,6 +8,7 @@ interface ImageUploadProps {
   value?: string[];
   onChange: (images: string[]) => void;
   className?: string;
+  maxImages?: number;
 }
 
 export const ImageUpload: React.FC<ImageUploadProps> = ({
@@ -15,7 +16,8 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
   error,
   value,
   onChange,
-  className
+  className,
+  maxImages
 }) => {
   const [previews, setPreviews] = useState<string[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -26,12 +28,18 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
+    const currentCount = previews.length;
+    const maxToAdd = maxImages ? Math.max(0, maxImages - currentCount) : files.length;
+    const filesToProcess = files.slice(0, maxToAdd);
+
+    if (filesToProcess.length === 0) return;
+
     const newPreviews: string[] = [];
-    files.forEach(file => {
+    filesToProcess.forEach(file => {
       const reader = new FileReader();
       reader.onloadend = () => {
         newPreviews.push(reader.result as string);
-        if (newPreviews.length === files.length) {
+        if (newPreviews.length === filesToProcess.length) {
           setPreviews(prev => [...prev, ...newPreviews]);
           onChange([...(value || []), ...newPreviews]);
         }
@@ -64,17 +72,19 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
             </button>
           </div>
         ))}
-        <button
-          type="button"
-          onClick={() => inputRef.current?.click()}
-          className={cn(
-            'w-32 h-32 rounded-lg border-2 border-dashed border-border flex flex-col items-center justify-center gap-2 hover:border-gold hover:bg-gold/5 transition-colors',
-            error && 'border-destructive'
-          )}
-        >
-          <Upload className="w-6 h-6 text-muted-foreground" />
-          <span className="text-xs text-muted-foreground">Upload Images</span>
-        </button>
+        {(!maxImages || previews.length < maxImages) && (
+          <button
+            type="button"
+            onClick={() => inputRef.current?.click()}
+            className={cn(
+              'w-32 h-32 rounded-lg border-2 border-dashed border-border flex flex-col items-center justify-center gap-2 hover:border-gold hover:bg-gold/5 transition-colors',
+              error && 'border-destructive'
+            )}
+          >
+            <Upload className="w-6 h-6 text-muted-foreground" />
+            <span className="text-xs text-muted-foreground">Upload Images</span>
+          </button>
+        )}
       </div>
 
       <input

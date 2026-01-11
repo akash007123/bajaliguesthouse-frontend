@@ -12,11 +12,14 @@ import {
   X,
   PlusCircle,
   Settings,
-  ChevronLeft
+  ChevronLeft,
+  MessageSquare, Bell
 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+// Add to imports
+import { Badge } from '@/components/ui/badge';
 
 interface NavItem {
   name: string;
@@ -89,48 +92,97 @@ export const DashboardLayout: React.FC = () => {
       </nav>
 
       {/* User Section */}
-      <div className="p-4 border-t border-sidebar-border">
-        <div className={cn(
-          "flex items-center mb-4",
-          sidebarOpen ? "space-x-3" : "justify-center"
-        )}>
-          <div className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
-            {user?.profilePicture ? (
-              <img src={user.profilePicture} alt="Profile" className="w-full h-full object-cover" />
-            ) : (
-              <div className="w-full h-full bg-sidebar-primary flex items-center justify-center">
-                <User className="w-5 h-5 text-sidebar-primary-foreground" />
-              </div>
-            )}
+      {/* Enhanced User Section */}
+<div className="p-4 border-t border-sidebar-border">
+  <div className={cn(
+    "flex items-center mb-4",
+    sidebarOpen ? "space-x-3" : "justify-center"
+  )}>
+    <div className="relative">
+      <div className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0 ring-2 ring-sidebar-primary/20 ring-offset-2 ring-offset-sidebar">
+        {user?.profilePicture ? (
+          <img src={user.profilePicture} alt="Profile" className="w-full h-full object-cover" />
+        ) : (
+          <div className="w-full h-full bg-gradient-to-br from-sidebar-primary to-sidebar-primary/80 flex items-center justify-center">
+            <User className="w-5 h-5 text-white" />
           </div>
-          {sidebarOpen && (
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-sidebar-foreground truncate">{user?.name}</p>
-              <p className="text-xs text-sidebar-foreground/60 truncate capitalize">{user?.role}</p>
-            </div>
-          )}
-        </div>
-        <Button
-          variant="ghost"
-          onClick={handleLogout}
-          className={cn(
-            "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-foreground",
-            sidebarOpen ? "w-full justify-start" : "w-full justify-center px-0"
-          )}
-        >
-          <LogOut className="w-5 h-5" />
-          {sidebarOpen && <span className="ml-2">Logout</span>}
-        </Button>
+        )}
       </div>
+      <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-emerald-500 rounded-full ring-2 ring-sidebar"></div>
+    </div>
+    {sidebarOpen && (
+      <div className="flex-1 min-w-0">
+        <div className="flex items-center gap-2">
+          <p className="text-sm font-semibold text-sidebar-foreground truncate">{user?.name}</p>
+          <Badge variant="secondary" className="text-xs capitalize px-1.5 py-0 h-5">
+            {user?.role}
+          </Badge>
+        </div>
+        <p className="text-xs text-sidebar-foreground/60 truncate">{user?.email}</p>
+      </div>
+    )}
+  </div>
+  
+  {sidebarOpen && (
+    <div className="mb-4">
+      <div className="flex items-center justify-between text-xs text-sidebar-foreground/60 mb-2">
+        <span>Account Status</span>
+        <Badge variant="outline" className="text-emerald-500 border-emerald-500/30">
+          Active
+        </Badge>
+      </div>
+    </div>
+  )}
+  
+  <div className="flex gap-2 mb-4">
+    <Link to={user?.role === 'admin' ? '/admin/dashboard/profile' : '/user/dashboard/profile'}>
+      <Button
+        variant="hotel"
+        size="sm"
+        className={cn(
+          "flex-1 text-sidebar-foreground border-sidebar-border hover:bg-sidebar-accent hover:text-sidebar-foreground",
+          !sidebarOpen && "px-0"
+        )}
+      >
+        <Settings className="w-4 h-4" />
+        {sidebarOpen && <span className="ml-2">Settings</span>}
+      </Button>
+    </Link>
+    <Button
+      variant="hotel"
+      size="sm"
+      className={cn(
+        "flex-1 text-sidebar-foreground border-sidebar-border hover:bg-sidebar-accent hover:text-sidebar-foreground relative",
+        !sidebarOpen && "px-0"
+      )}
+    >
+      <Bell className="w-4 h-4" />
+      {sidebarOpen && <span className="ml-2">Alerts</span>}
+      <span className="absolute -top-1 -right-1 w-2 h-2 bg-rose-500 rounded-full"></span>
+    </Button>
+  </div>
+  
+  <Button
+    onClick={handleLogout}
+    variant="ghost"
+    className={cn(
+      "text-sidebar-foreground hover:bg-sidebar-accent/50 hover:text-sidebar-foreground w-full",
+      sidebarOpen ? "justify-start" : "justify-center px-0"
+    )}
+  >
+    <LogOut className="w-4 h-4" />
+    {sidebarOpen && <span className="ml-2">Logout</span>}
+  </Button>
+</div>
     </>
   );
 
   return (
-    <div className="min-h-screen flex bg-background">
+    <div className="min-h-screen bg-background">
       {/* Desktop Sidebar */}
       <aside
         className={cn(
-          "hidden md:flex flex-col bg-sidebar transition-all duration-300 shadow-lg",
+          "hidden md:flex flex-col bg-sidebar transition-all duration-300 shadow-lg fixed left-0 top-0 h-screen",
           sidebarOpen ? "w-64" : "w-20"
         )}
       >
@@ -183,7 +235,7 @@ export const DashboardLayout: React.FC = () => {
       </AnimatePresence>
 
       {/* Main Content */}
-      <main className="flex-1 md:ml-0 mt-16 md:mt-0">
+      <main className={cn("flex-1 mt-16 md:mt-0", sidebarOpen ? "md:ml-64" : "md:ml-20")}>
         <div className="p-6 md:p-8">
           <Outlet />
         </div>

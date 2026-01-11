@@ -1,7 +1,7 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
 
-type StatusType = 'New' | 'Pending' | 'Approved' | 'Cancelled';
+type StatusType = 'New' | 'Pending' | 'Approved' | 'Cancelled' | 'Completed';
 
 interface StatusBadgeProps {
   status: StatusType;
@@ -13,6 +13,7 @@ const statusStyles: Record<StatusType, string> = {
   Pending: 'bg-amber-100 text-amber-700 border-amber-200',
   Approved: 'bg-emerald-100 text-emerald-700 border-emerald-200',
   Cancelled: 'bg-red-100 text-red-700 border-red-200',
+  Completed: 'bg-green-100 text-green-700 border-green-200',
 };
 
 export const StatusBadge: React.FC<StatusBadgeProps> = ({ status, className }) => {
