@@ -39,6 +39,7 @@ const adminNavItems: NavItem[] = [
   { name: 'Bookings', path: '/admin/dashboard/bookings', icon: Calendar },
   { name: 'Rooms', path: '/admin/dashboard/rooms', icon: BedDouble },
   { name: 'Add Room', path: '/admin/dashboard/rooms/add', icon: PlusCircle },
+  { name: 'Custom', path: '/admin/dashboard/rooms/custom', icon: PlusCircle },
   { name: 'Profile', path: '/admin/dashboard/profile', icon: User },
 ];
 
