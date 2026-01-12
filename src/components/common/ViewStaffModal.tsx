@@ -59,12 +59,19 @@ const ViewStaffModal: React.FC<ViewStaffModalProps> = ({ isOpen, onClose, staff 
             <div>
               <label className="block text-sm font-medium text-gray-700">Documents</label>
               <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {staff.documents.map((doc, index) => (
-                  <div key={index} className="border rounded p-2">
-                    <p className="text-sm font-medium">{doc.name}</p>
-                    <img src={doc.file} alt={doc.name} className="mt-2 w-32 h-32 object-cover rounded" />
-                  </div>
-                ))}
+                {staff.documents.map((doc, index) => {
+                  const isPdf = doc.file.toLowerCase().endsWith('.pdf');
+                  return (
+                    <div key={index} className="border rounded p-2">
+                      <p className="text-sm font-medium">{doc.name}</p>
+                      {isPdf ? (
+                        <iframe src={doc.file} className="mt-2 w-full h-64 border rounded" title={doc.name} />
+                      ) : (
+                        <img src={doc.file} alt={doc.name} className="mt-2 w-32 h-32 object-cover rounded" />
+                      )}
+                    </div>
+                  );
+                })}
               </div>
             </div>
           )}
