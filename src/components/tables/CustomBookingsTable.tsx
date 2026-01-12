@@ -13,6 +13,7 @@ import {
   Edit,
   Trash2
 } from 'lucide-react';
+import {formatDate} from '../../utils/common';
 
 interface CustomBooking {
   id: string;
@@ -145,7 +146,7 @@ const CustomBookingsTable: React.FC<CustomBookingsTableProps> = ({ onView, onEdi
       header: 'Created',
       render: (booking: CustomBooking) => (
         <span className="text-sm text-muted-foreground">
-          {new Date(booking.createdAt).toLocaleDateString()}
+          {formatDate(booking.createdAt)}
         </span>
       )
     },

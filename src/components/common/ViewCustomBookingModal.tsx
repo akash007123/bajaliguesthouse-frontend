@@ -1,5 +1,6 @@
 import React from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import {formatDateTime} from '../../utils/common';
 
 interface CustomBooking {
   id: string;
@@ -57,7 +58,8 @@ const ViewCustomBookingModal: React.FC<ViewCustomBookingModalProps> = ({ booking
                 <strong>Room No:</strong> {booking.roomNo}
               </div>
               <div>
-                <strong>Created At:</strong> {new Date(booking.createdAt).toLocaleString()}
+                <strong>Created At:</strong> {formatDateTime(booking.createdAt)
+            }
               </div>
             </div>
             <div className="flex gap-4">
