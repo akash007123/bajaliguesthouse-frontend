@@ -34,6 +34,26 @@ export interface Booking {
   reviewed?: boolean;
 }
 
+export interface StaffMember {
+  id: string;
+  name: string;
+  email: string;
+  mobile: string;
+  address: string;
+  role: string;
+  profilePic?: string;
+  bankPassbook?: string;
+  documents: { name: string; file: string }[];
+  bankDetails?: {
+    bankName: string;
+    accountNo: string;
+    ifsc: string;
+    branch: string;
+  };
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface HotelInfo {
   name: string;
   tagline: string;
