@@ -4,6 +4,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Booking } from '@/types';
 import { StatusBadge } from '@/components/common/StatusBadge';
 import ViewBookingModal from '@/components/common/ViewBookingModal';
+import ReviewModal from '@/components/common/ReviewModal';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -54,6 +55,8 @@ const BookingHistory: React.FC = () => {
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
   const [invoiceBooking, setInvoiceBooking] = useState<Booking | null>(null);
+  const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
+  const [selectedBookingForReview, setSelectedBookingForReview] = useState<Booking | null>(null);
   const invoiceRef = useRef<HTMLDivElement>(null);
 
   const { data: bookings = [], isLoading, refetch } = useQuery<Booking[]>({
@@ -117,7 +120,27 @@ const BookingHistory: React.FC = () => {
 
   const handleLeaveReview = (booking: Booking) => {
     if (booking.status === 'Completed' && !booking.reviewed) {
-      toast.success('Review feature coming soon!');
+      setSelectedBookingForReview(booking);
+      setIsReviewModalOpen(true);
+    }
+  };
+
+  const handleSubmitReview = async (rating: number, feedback: string) => {
+    if (!selectedBookingForReview) return;
+
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/users/bookings/${selectedBookingForReview.id}/review`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      },
+      body: JSON.stringify({ rating, feedback })
+    });
+
+    if (response.ok) {
+      queryClient.invalidateQueries({ queryKey: ['userBookings'] });
+    } else {
+      throw new Error('Failed to submit review');
     }
   };
 
@@ -704,6 +727,13 @@ const BookingHistory: React.FC = () => {
         booking={selectedBooking}
         isOpen={isViewModalOpen}
         onClose={() => setIsViewModalOpen(false)}
+      />
+
+      <ReviewModal
+        booking={selectedBookingForReview}
+        isOpen={isReviewModalOpen}
+        onClose={() => setIsReviewModalOpen(false)}
+        onSubmit={handleSubmitReview}
       />
 
       {/* Hidden Invoice Template */}
