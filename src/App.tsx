@@ -33,6 +33,7 @@ import AdminRooms from "./pages/admin/AdminRooms";
 import AdminAddRoom from "./pages/admin/AdminAddRoom";
 import AdminEditRoom from "./pages/admin/AdminEditRoom";
 import AdminCustomBooking from "./pages/admin/AdminCustomBooking";
+import RevenueDashboard from "./pages/admin/RevenueDashboard";
 import Staff from "./pages/admin/Staff";
 
 import NotFound from "./pages/NotFound";
@@ -78,6 +79,7 @@ const App = () => (
               <Route path="rooms/add" element={<AdminAddRoom />} />
               <Route path="rooms/edit/:id" element={<AdminEditRoom />} />
               <Route path="rooms/custom" element={<AdminCustomBooking />} />
+              <Route path="rooms/revenue" element={<RevenueDashboard />} />
               <Route path="rooms/staff" element={<Staff />} />
               <Route path="profile" element={<UserProfile />} />
             </Route>

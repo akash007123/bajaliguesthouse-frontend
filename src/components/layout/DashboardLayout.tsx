@@ -15,7 +15,7 @@ import {
   ChevronLeft,
   Computer,
   Bed,
-  MessageSquare,
+  BadgeIndianRupee,
   Bell,
 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
@@ -44,6 +44,7 @@ const adminNavItems: NavItem[] = [
   { name: "Add Room", path: "/admin/dashboard/rooms/add", icon: PlusCircle },
   { name: "Custom", path: "/admin/dashboard/rooms/custom", icon: Bed },
   { name: "Staff", path: "/admin/dashboard/rooms/staff", icon: Computer },
+  { name: "Revenue", path: "/admin/dashboard/rooms/revenue", icon: BadgeIndianRupee },
   { name: "Profile", path: "/admin/dashboard/profile", icon: User },
 ];
 
