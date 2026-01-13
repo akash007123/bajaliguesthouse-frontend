@@ -4,7 +4,18 @@ import { motion } from 'framer-motion';
 import { ArrowRight, Star, Wifi, Coffee, Car, Waves, Utensils, Dumbbell, Users, Award, Clock, MapPin, Quote } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { RoomCard } from '@/components/common/RoomCard';
-import { Room, HotelInfo } from '@/types';
+import { Room, HotelInfo, Booking } from '@/types';
+
+interface PopulatedReview {
+  id: string;
+  userName: string;
+  rating: number;
+  feedback: string;
+  userId?: {
+    profilePicture?: string;
+    name: string;
+  };
+}
 import { useQuery } from '@tanstack/react-query';
 import { useAuth } from '@/context/AuthContext';
 import heroImage from '@/assets/hero-hotel.jpg';
@@ -33,6 +44,11 @@ const Home: React.FC = () => {
   const { data: rooms = [] } = useQuery<Room[]>({
     queryKey: ['rooms'],
     queryFn: () => fetch(`${import.meta.env.VITE_API_URL}/rooms`).then(res => res.json())
+  });
+
+  const { data: reviews = [] } = useQuery<PopulatedReview[]>({
+    queryKey: ['reviews'],
+    queryFn: () => fetch(`${import.meta.env.VITE_API_URL}/reviews`).then(res => res.json())
   });
 
   const featuredRooms = rooms.slice(0, 3);
@@ -278,31 +294,9 @@ const Home: React.FC = () => {
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {[
-              {
-                name: 'Sarah Johnson',
-                role: 'Business Traveler',
-                rating: 5,
-                text: 'An absolutely exceptional experience. The attention to detail and personalized service made our stay unforgettable.',
-                avatar: 'SJ'
-              },
-              {
-                name: 'Michael Chen',
-                role: 'Family Vacation',
-                rating: 5,
-                text: 'Perfect for families! The rooms were spacious, staff was amazing, and the amenities exceeded our expectations.',
-                avatar: 'MC'
-              },
-              {
-                name: 'Emma Rodriguez',
-                role: 'Honeymoon',
-                rating: 5,
-                text: 'Our honeymoon was magical thanks to Shri Balaji. Every moment was perfect, from the romantic dinner to the spa treatments.',
-                avatar: 'ER'
-              }
-            ].map((testimonial, index) => (
+            {reviews.slice(0, 3).map((review, index) => (
               <motion.div
-                key={testimonial.name}
+                key={review.id}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -312,21 +306,29 @@ const Home: React.FC = () => {
                 <div className="flex items-center mb-4">
                   <Quote className="w-8 h-8 text-gold mr-2" />
                   <div className="flex">
-                    {[...Array(testimonial.rating)].map((_, i) => (
+                    {[...Array(review.rating)].map((_, i) => (
                       <Star key={i} className="w-4 h-4 fill-gold text-gold" />
                     ))}
                   </div>
                 </div>
                 <p className="text-muted-foreground mb-6 leading-relaxed italic">
-                  "{testimonial.text}"
+                  "{review.feedback}"
                 </p>
                 <div className="flex items-center">
-                  <div className="w-12 h-12 rounded-full bg-gold text-white flex items-center justify-center font-semibold mr-4">
-                    {testimonial.avatar}
-                  </div>
+                  {review.userId?.profilePicture ? (
+                    <img
+                      src={review.userId.profilePicture}
+                      alt={review.userName}
+                      className="w-12 h-12 rounded-full object-cover mr-4"
+                    />
+                  ) : (
+                    <div className="w-12 h-12 rounded-full bg-gold text-white flex items-center justify-center font-semibold mr-4">
+                      {review.userName.split(' ').map(n => n[0]).join('')}
+                    </div>
+                  )}
                   <div>
-                    <h4 className="font-semibold text-foreground">{testimonial.name}</h4>
-                    <p className="text-sm text-muted-foreground">{testimonial.role}</p>
+                    <h4 className="font-semibold text-foreground">{review.userName}</h4>
+                    <p className="text-sm text-muted-foreground">Guest</p>
                   </div>
                 </div>
               </motion.div>
