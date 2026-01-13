@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Booking } from '@/types';
 import { StatusBadge } from '@/components/common/StatusBadge';
 import ViewBookingModal from '@/components/common/ViewBookingModal';
-import InvoiceModal from '@/components/common/InvoiceModal';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -13,6 +12,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Separator } from '@/components/ui/separator';
 import { Skeleton } from '@/components/ui/skeleton';
 import { formatDate } from '../../utils/common';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 import {
   Calendar,
   Building,
@@ -52,7 +53,8 @@ const BookingHistory: React.FC = () => {
   const [viewMode, setViewMode] = useState<'list' | 'grid'>('list');
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
-  const [isInvoiceModalOpen, setIsInvoiceModalOpen] = useState(false);
+  const [invoiceBooking, setInvoiceBooking] = useState<Booking | null>(null);
+  const invoiceRef = useRef<HTMLDivElement>(null);
 
   const { data: bookings = [], isLoading, refetch } = useQuery<Booking[]>({
     queryKey: ['userBookings'],
@@ -88,8 +90,29 @@ const BookingHistory: React.FC = () => {
   };
 
   const handleDownloadInvoice = (booking: Booking) => {
-    setSelectedBooking(booking);
-    setIsInvoiceModalOpen(true);
+    setInvoiceBooking(booking);
+    setTimeout(async () => {
+      if (!invoiceRef.current) return;
+      try {
+        toast.info('Generating invoice...');
+        const canvas = await html2canvas(invoiceRef.current, {
+          scale: 2,
+          useCORS: true,
+          allowTaint: false,
+          backgroundColor: '#ffffff',
+        });
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new jsPDF('p', 'mm', 'a4');
+        const imgWidth = 210;
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+        pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+        pdf.save(`invoice-${booking.id}.pdf`);
+        toast.success('Invoice downloaded successfully');
+      } catch (error) {
+        console.error('Error generating PDF:', error);
+        toast.error('Error generating invoice');
+      }
+    }, 500);
   };
 
   const handleLeaveReview = (booking: Booking) => {
@@ -682,11 +705,112 @@ const BookingHistory: React.FC = () => {
         isOpen={isViewModalOpen}
         onClose={() => setIsViewModalOpen(false)}
       />
-      <InvoiceModal
-        booking={selectedBooking}
-        isOpen={isInvoiceModalOpen}
-        onClose={() => setIsInvoiceModalOpen(false)}
-      />
+
+      {/* Hidden Invoice Template */}
+      <div ref={invoiceRef} className="absolute -left-[9999px] -top-[9999px] bg-white p-8 space-y-6">
+        {invoiceBooking && (
+          <>
+            {/* Hotel Header */}
+            <div className="text-center border-b pb-4">
+              <div className="mb-4">
+                <h1 className="text-3xl font-bold">Shri Bajali Guest House</h1>
+                <p className="text-sm text-muted-foreground">123 Main Street, City, State, PIN 123456</p>
+                <p className="text-sm text-muted-foreground">Phone: +91 9876543210 | Email: info@shribajali.com</p>
+              </div>
+              <h2 className="text-2xl font-semibold">Hotel Booking Invoice</h2>
+              <p className="text-muted-foreground">Thank you for choosing our hotel</p>
+            </div>
+
+            {/* Invoice Details */}
+            <div className="grid grid-cols-2 gap-6">
+              <div>
+                <h3 className="font-semibold mb-2">Invoice To:</h3>
+                <div className="space-y-1">
+                  <p className="font-medium">{invoiceBooking.userName}</p>
+                  <p className="text-sm text-muted-foreground">{invoiceBooking.userEmail}</p>
+                  {invoiceBooking.userMobile && (
+                    <p className="text-sm text-muted-foreground">{invoiceBooking.userMobile}</p>
+                  )}
+                </div>
+              </div>
+              <div>
+                <h3 className="font-semibold mb-2">Invoice Details:</h3>
+                <div className="space-y-1">
+                  <p className="text-sm">Invoice #: INV-{invoiceBooking.id}</p>
+                  <p className="text-sm">Date: {formatDate(new Date().toISOString())}</p>
+                  <div className="text-sm">Status: <Badge variant="secondary">{invoiceBooking.status}</Badge></div>
+                </div>
+              </div>
+            </div>
+
+            <Separator />
+
+            {/* Booking Information */}
+            <div>
+              <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
+                <Building className="w-4 h-4" />
+                Booking Details
+              </h3>
+              <div className="bg-muted/50 p-4 rounded-lg space-y-3">
+                <div className="flex justify-between">
+                  <span className="font-medium">Room:</span>
+                  <span>{invoiceBooking.roomName} {invoiceBooking.roomType && `(${invoiceBooking.roomType})`}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="font-medium">Check-in:</span>
+                  <span>{formatDate(invoiceBooking.checkIn)}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="font-medium">Check-out:</span>
+                  <span>{formatDate(invoiceBooking.checkOut)}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="font-medium">Guests:</span>
+                  <span>{invoiceBooking.guests}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="font-medium">Nights:</span>
+                  <span>{Math.floor((new Date(invoiceBooking.checkOut).getTime() - new Date(invoiceBooking.checkIn).getTime()) / (1000 * 3600 * 24))}</span>
+                </div>
+              </div>
+            </div>
+
+            <Separator />
+
+            {/* Pricing */}
+            <div>
+              <h3 className="text-lg font-semibold mb-3">Payment Summary</h3>
+              <div className="space-y-2">
+                <div className="flex justify-between">
+                  <span>Room Rate × {Math.floor((new Date(invoiceBooking.checkOut).getTime() - new Date(invoiceBooking.checkIn).getTime()) / (1000 * 3600 * 24))} nights</span>
+                  <span>₹{invoiceBooking.totalPrice.toLocaleString()}</span>
+                </div>
+                <div className="flex justify-between font-semibold text-lg border-t pt-2">
+                  <span>Total Amount</span>
+                  <span>₹{invoiceBooking.totalPrice.toLocaleString()}</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Special Requests */}
+            {invoiceBooking.specialRequests && (
+              <>
+                <Separator />
+                <div>
+                  <h3 className="font-semibold mb-2">Special Requests</h3>
+                  <p className="text-sm bg-muted p-3 rounded-md">{invoiceBooking.specialRequests}</p>
+                </div>
+              </>
+            )}
+
+            {/* Footer */}
+            <div className="text-center text-sm text-muted-foreground border-t pt-4">
+              <p>Thank you for your business!</p>
+              <p>For any questions, please contact our support team.</p>
+            </div>
+          </>
+        )}
+      </div>
     </motion.div>
   );
 };
