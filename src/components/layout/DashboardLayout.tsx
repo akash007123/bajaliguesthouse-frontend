@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Outlet, Link, useLocation, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -21,7 +21,6 @@ import {
 import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-// Add to imports
 import { Badge } from "@/components/ui/badge";
 
 interface NavItem {
@@ -54,6 +53,11 @@ export const DashboardLayout: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { user, logout } = useAuth();
+  
+  // Ref for the scrollable container
+  const scrollableContainerRef = useRef<HTMLDivElement>(null);
+  // Store scroll position
+  const scrollPositionRef = useRef(0);
 
   const navItems = user?.role === "admin" ? adminNavItems : userNavItems;
   const isActive = (path: string) => location.pathname === path;
@@ -63,10 +67,45 @@ export const DashboardLayout: React.FC = () => {
     navigate("/");
   };
 
+  // Save scroll position before navigation
+  const saveScrollPosition = () => {
+    if (scrollableContainerRef.current) {
+      scrollPositionRef.current = scrollableContainerRef.current.scrollTop;
+    }
+  };
+
+  // Restore scroll position after navigation
+  const restoreScrollPosition = () => {
+    if (scrollableContainerRef.current) {
+      scrollableContainerRef.current.scrollTop = scrollPositionRef.current;
+    }
+  };
+
+  // Handle link click in the bottom section
+  const handleBottomLinkClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    saveScrollPosition();
+    setMobileOpen(false);
+    
+    // Small delay to ensure DOM updates before restoring scroll
+    setTimeout(restoreScrollPosition, 10);
+  };
+
+  // Restore scroll position when sidebar state changes
+  useEffect(() => {
+    // Small delay to ensure DOM is updated
+    const timer = setTimeout(() => {
+      if (scrollableContainerRef.current) {
+        scrollableContainerRef.current.scrollTop = scrollPositionRef.current;
+      }
+    }, 50);
+    
+    return () => clearTimeout(timer);
+  }, [sidebarOpen]);
+
   const NavContent = () => (
     <>
       {/* Logo */}
-      <div className="p-6 border-b border-sidebar-border">
+      <div className="p-6 border-b border-sidebar-border flex-shrink-0">
         <Link to="/" className="flex items-center space-x-2">
           <span
             className={cn(
@@ -79,29 +118,36 @@ export const DashboardLayout: React.FC = () => {
         </Link>
       </div>
 
-      {/* Navigation */}
-      <nav className="flex-1 p-4 space-y-2">
-        {navItems.map((item) => (
-          <Link
-            key={item.path}
-            to={item.path}
-            onClick={() => setMobileOpen(false)}
-            className={cn(
-              "flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200",
-              isActive(item.path)
-                ? "bg-sidebar-primary text-sidebar-primary-foreground"
-                : "text-sidebar-foreground hover:bg-sidebar-accent"
-            )}
-          >
-            <item.icon className="w-5 h-5 flex-shrink-0" />
-            {sidebarOpen && <span className="font-medium">{item.name}</span>}
-          </Link>
-        ))}
-      </nav>
+      {/* Scrollable Navigation Area - Hidden Scrollbar */}
+      <div 
+        ref={scrollableContainerRef}
+        className="flex-1 overflow-y-auto overflow-x-hidden py-4 scrollbar-hide"
+      >
+        <nav className="space-y-2 px-4">
+          {navItems.map((item) => (
+            <Link
+              key={item.path}
+              to={item.path}
+              onClick={() => {
+                saveScrollPosition();
+                setMobileOpen(false);
+              }}
+              className={cn(
+                "flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200",
+                isActive(item.path)
+                  ? "bg-sidebar-primary text-sidebar-primary-foreground"
+                  : "text-sidebar-foreground hover:bg-sidebar-accent"
+              )}
+            >
+              <item.icon className="w-5 h-5 flex-shrink-0" />
+              {sidebarOpen && <span className="font-medium">{item.name}</span>}
+            </Link>
+          ))}
+        </nav>
+      </div>
 
-      {/* User Section */}
-      {/* Enhanced User Section */}
-      <div className="p-4 border-t border-sidebar-border">
+      {/* User Section - Fixed at bottom */}
+      <div className="p-4 border-t border-sidebar-border flex-shrink-0">
         <div
           className={cn(
             "flex items-center mb-4",
@@ -165,6 +211,7 @@ export const DashboardLayout: React.FC = () => {
                 ? "/admin/dashboard/profile"
                 : "/user/dashboard/profile"
             }
+            onClick={handleBottomLinkClick}
           >
             <Button
               variant="hotel"
@@ -181,6 +228,10 @@ export const DashboardLayout: React.FC = () => {
           <Button
             variant="hotel"
             size="sm"
+            onClick={() => {
+              // Save scroll position before showing alerts/modal
+              saveScrollPosition();
+            }}
             className={cn(
               "flex-1 text-sidebar-foreground border-sidebar-border hover:bg-sidebar-accent hover:text-sidebar-foreground relative",
               !sidebarOpen && "px-0"
@@ -193,7 +244,10 @@ export const DashboardLayout: React.FC = () => {
         </div>
 
         <Button
-          onClick={handleLogout}
+          onClick={() => {
+            saveScrollPosition();
+            handleLogout();
+          }}
           variant="ghost"
           className={cn(
             "text-sidebar-foreground hover:bg-sidebar-accent/50 hover:text-sidebar-foreground w-full",
@@ -219,8 +273,11 @@ export const DashboardLayout: React.FC = () => {
         <NavContent />
         {/* Collapse Button */}
         <button
-          onClick={() => setSidebarOpen(!sidebarOpen)}
-          className="absolute top-24 -right-3 w-6 h-6 bg-sidebar-primary rounded-full flex items-center justify-center text-sidebar-primary-foreground shadow-lg"
+          onClick={() => {
+            saveScrollPosition();
+            setSidebarOpen(!sidebarOpen);
+          }}
+          className="absolute top-24 -right-3 w-6 h-6 bg-sidebar-primary rounded-full flex items-center justify-center text-sidebar-primary-foreground shadow-lg z-10"
           style={{ left: sidebarOpen ? "248px" : "68px" }}
         >
           <ChevronLeft
