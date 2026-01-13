@@ -3,6 +3,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Booking } from '@/types';
+import { StatusBadge } from '@/components/common/StatusBadge';
 import { Calendar, User, Building, Users, Clock, MessageSquare } from 'lucide-react';
 import { formatDate } from '../../utils/common';
 
@@ -97,9 +98,9 @@ const ViewBookingModal: React.FC<ViewBookingModalProps> = ({ booking, isOpen, on
               </div>
               <div>
                 <label className="text-sm font-medium text-muted-foreground">Status</label>
-                <Badge variant="secondary" className={`mt-1 ${booking.status === 'Approved' ? 'bg-green-100 text-green-500' : ''}`}>
-                  {booking.status}
-                </Badge>
+                <div className="mt-1">
+                  <StatusBadge status={booking.status} />
+                </div>
               </div>
               <div>
                 <label className="text-sm font-medium text-muted-foreground">Created At</label>

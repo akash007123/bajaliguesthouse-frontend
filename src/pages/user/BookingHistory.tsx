@@ -3,6 +3,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Booking } from '@/types';
 import { StatusBadge } from '@/components/common/StatusBadge';
+import ViewBookingModal from '@/components/common/ViewBookingModal';
+import InvoiceModal from '@/components/common/InvoiceModal';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -11,7 +13,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Separator } from '@/components/ui/separator';
 import { Skeleton } from '@/components/ui/skeleton';
 import { formatDate } from '../../utils/common';
-import { 
+import {
   Calendar,
   Building,
   DollarSign,
@@ -48,6 +50,9 @@ const BookingHistory: React.FC = () => {
   const [statusFilter, setStatusFilter] = useState('All');
   const [cancellingId, setCancellingId] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<'list' | 'grid'>('list');
+  const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
+  const [isViewModalOpen, setIsViewModalOpen] = useState(false);
+  const [isInvoiceModalOpen, setIsInvoiceModalOpen] = useState(false);
 
   const { data: bookings = [], isLoading, refetch } = useQuery<Booking[]>({
     queryKey: ['userBookings'],
@@ -78,13 +83,13 @@ const BookingHistory: React.FC = () => {
   };
 
   const handleViewDetails = (booking: Booking) => {
-    // Navigate to booking details or open modal
-    console.log('View details:', booking.id);
-    toast.info('Booking details feature coming soon!');
+    setSelectedBooking(booking);
+    setIsViewModalOpen(true);
   };
 
   const handleDownloadInvoice = (booking: Booking) => {
-    toast.success('Invoice download feature coming soon!');
+    setSelectedBooking(booking);
+    setIsInvoiceModalOpen(true);
   };
 
   const handleLeaveReview = (booking: Booking) => {
@@ -670,6 +675,18 @@ const BookingHistory: React.FC = () => {
           </CardContent>
         </Card>
       </motion.div>
+
+      {/* Modals */}
+      <ViewBookingModal
+        booking={selectedBooking}
+        isOpen={isViewModalOpen}
+        onClose={() => setIsViewModalOpen(false)}
+      />
+      <InvoiceModal
+        booking={selectedBooking}
+        isOpen={isInvoiceModalOpen}
+        onClose={() => setIsInvoiceModalOpen(false)}
+      />
     </motion.div>
   );
 };
