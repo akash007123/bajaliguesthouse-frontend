@@ -32,6 +32,9 @@ export interface Booking {
   createdAt: string;
   specialRequests?: string;
   reviewed?: boolean;
+  rating?: number;
+  feedback?: string;
+  reviewApproved?: boolean;
 }
 
 export interface StaffMember {
@@ -52,6 +55,18 @@ export interface StaffMember {
   };
   createdAt: string;
   updatedAt: string;
+}
+
+export interface Review {
+  id: string;
+  bookingId: string;
+  roomName: string;
+  userName: string;
+  userEmail: string;
+  rating: number;
+  feedback: string;
+  reviewApproved: boolean;
+  createdAt: string;
 }
 
 export interface HotelInfo {
