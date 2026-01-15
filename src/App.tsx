@@ -15,6 +15,7 @@ import Rooms from "./pages/public/Rooms";
 import RoomDetails from "./pages/public/RoomDetails";
 import About from "./pages/public/About";
 import Contact from "./pages/public/Contact";
+import UjjainDarshan from "./pages/public/UjjainDarshan";
 
 // Auth Pages
 import { UserLogin, AdminLogin } from "./pages/auth/AuthLogin";
@@ -57,6 +58,7 @@ const App = () => (
               <Route path="/rooms/:id" element={<RoomDetails />} />
               <Route path="/about" element={<About />} />
               <Route path="/contact" element={<Contact />} />
+              <Route path="/ujjain-darshan" element={<UjjainDarshan />} />
             </Route>
 
             {/* Auth Routes */}
