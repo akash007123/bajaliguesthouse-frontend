@@ -16,6 +16,7 @@ const navLinks = [
   { name: 'Home', path: '/' },
   { name: 'Rooms', path: '/rooms' },
   { name: 'About', path: '/about' },
+  { name: 'Ujjain Darsan', path: '/ujjain-darshan' },
   { name: 'Contact', path: '/contact' },
 ];
 

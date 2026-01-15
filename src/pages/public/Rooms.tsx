@@ -43,8 +43,8 @@ const Rooms: React.FC = () => {
               Our Rooms & Suites
             </h1>
             <p className="text-primary-foreground/80 text-lg max-w-2xl mx-auto">
-              Discover our collection of luxuriously appointed rooms and suites, 
-              each designed to provide the ultimate in comfort and elegance.
+              Discover our comfortable homestay rooms in the heart of Ujjain,
+              each designed to provide authentic Indian hospitality with modern amenities.
             </p>
           </motion.div>
         </div>

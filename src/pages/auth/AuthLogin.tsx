@@ -69,7 +69,7 @@ const AuthLogin: React.FC<AuthLoginProps> = ({ isAdmin = false }) => {
               {isAdmin ? 'Admin Login' : 'Welcome Back'}
             </h1>
             <p className="text-muted-foreground mt-2">
-              Sign in to {isAdmin ? 'manage the hotel' : 'your account'}
+              Sign in to {isAdmin ? 'manage the homestay' : 'your account'}
             </p>
           </div>
 

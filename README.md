@@ -1,13 +1,15 @@
-# Shri Balaji Hotel Booking System
+# Shri Balaji Home Stay - Ujjain, Madhya Pradesh
 
-A modern, full-stack hotel booking application built with React, TypeScript, and Node.js.
+A modern homestay booking system for Shri Balaji Home Stay, located in the spiritual city of Ujjain, Madhya Pradesh. Experience authentic Indian hospitality with traditional warmth and modern amenities.
 
 ## Features
 
 - User authentication and authorization
-- Room booking and management
+- Room booking and management for pilgrims and travelers
 - Admin dashboard for staff and bookings
-- Custom booking requests
+- Custom booking requests for groups and special occasions
+- Temple visit arrangements and spiritual guidance
+- Traditional Indian cuisine and cultural experiences
 - Responsive design with Tailwind CSS
 - Real-time booking status updates
 

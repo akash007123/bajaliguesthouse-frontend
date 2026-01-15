@@ -196,7 +196,7 @@ const AdminRooms: React.FC = () => {
           <h1 className="text-3xl md:text-4xl font-serif font-bold mb-2 bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent">
             Rooms Management
           </h1>
-          <p className="text-muted-foreground text-lg">Manage and monitor all hotel rooms</p>
+          <p className="text-muted-foreground text-lg">Manage and monitor all homestay rooms</p>
         </div>
         <Link to="/admin/dashboard/rooms/add">
           <Button className="gap-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 shadow-lg hover:shadow-xl">

@@ -107,7 +107,7 @@ const Staff: React.FC = () => {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-foreground">Staff Management</h1>
-          <p className="text-muted-foreground">Manage hotel staff members</p>
+          <p className="text-muted-foreground">Manage homestay staff members</p>
         </div>
         <Button onClick={() => setIsModalOpen(true)}>
           <Plus className="w-4 h-4 mr-2" />

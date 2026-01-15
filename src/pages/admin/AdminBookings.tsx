@@ -148,7 +148,7 @@ const AdminBookings: React.FC = () => {
           <h1 className="text-3xl md:text-4xl font-serif font-bold mb-2 bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent">
             Bookings Management
           </h1>
-          <p className="text-muted-foreground text-lg">Manage and monitor all hotel bookings</p>
+          <p className="text-muted-foreground text-lg">Manage and monitor all homestay bookings</p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline" className="gap-2">

@@ -28,8 +28,8 @@ export const Footer: React.FC = () => {
             </div>
 
             <p className="text-primary-foreground/80 text-sm leading-relaxed">
-              {hotelInfo.tagline}. Experience world-class hospitality in our
-              Mediterranean paradise.
+              {hotelInfo.tagline}. Experience authentic Indian hospitality in the
+              spiritual heart of Ujjain, Madhya Pradesh.
             </p>
             <div className="flex space-x-4 mt-6">
               <a
@@ -76,7 +76,7 @@ export const Footer: React.FC = () => {
           <div>
             <h4 className="font-serif text-lg font-semibold mb-4">Services</h4>
             <ul className="space-y-3">
-              {["Spa & Wellness", "Fine Dining", "Events", "Concierge"].map(
+              {["Temple Tours", "Traditional Cuisine", "Cultural Events", "Spiritual Guidance"].map(
                 (item) => (
                   <li key={item}>
                     <span className="text-primary-foreground/80 text-sm">

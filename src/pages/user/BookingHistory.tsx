@@ -217,7 +217,7 @@ const BookingHistory: React.FC = () => {
           <h1 className="text-3xl md:text-4xl font-serif font-bold mb-2 bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent">
             Booking History
           </h1>
-          <p className="text-muted-foreground text-lg">Track and manage all your hotel reservations</p>
+          <p className="text-muted-foreground text-lg">Track and manage all your homestay reservations</p>
         </div>
         <div className="flex gap-2">
           <Button
@@ -748,7 +748,7 @@ const BookingHistory: React.FC = () => {
                 <p className="text-sm text-muted-foreground">Phone: +91 9876543210 | Email: info@shribajali.com</p>
               </div>
               <h2 className="text-2xl font-semibold">Hotel Booking Invoice</h2>
-              <p className="text-muted-foreground">Thank you for choosing our hotel</p>
+              <p className="text-muted-foreground">Thank you for choosing Shri Balaji Home Stay</p>
             </div>
 
             {/* Invoice Details */}

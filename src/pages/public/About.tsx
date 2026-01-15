@@ -7,10 +7,10 @@ import spaImage from '@/assets/amenity-spa.jpg';
 import restaurantImage from '@/assets/amenity-restaurant.jpg';
 
 const stats = [
-  { icon: Star, value: '5-Star', label: 'Rating' },
-  { icon: Award, value: '15+', label: 'Years of Excellence' },
-  { icon: Users, value: '50K+', label: 'Happy Guests' },
-  { icon: Clock, value: '24/7', label: 'Service' },
+  { icon: Star, value: '4.8/5', label: 'Guest Rating' },
+  { icon: Award, value: '10+', label: 'Years of Service' },
+  { icon: Users, value: '5000+', label: 'Pilgrims Served' },
+  { icon: Clock, value: '24/7', label: 'Spiritual Support' },
 ];
 
 const About: React.FC = () => {
@@ -28,7 +28,7 @@ const About: React.FC = () => {
               Our Story
             </h1>
             <p className="text-primary-foreground/80 text-lg max-w-2xl mx-auto">
-              Discover the legacy of luxury and hospitality that defines Shri Balaji 
+              Discover the spiritual legacy and traditional hospitality of Shri Balaji Home Stay in Ujjain
             </p>
           </motion.div>
         </div>
@@ -43,23 +43,23 @@ const About: React.FC = () => {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
             >
-              <span className="text-gold font-medium mb-2 block">ESTABLISHED 2010</span>
+              <span className="text-gold font-medium mb-2 block">ESTABLISHED 2014</span>
               <h2 className="heading-section text-foreground mb-6">
-                A Legacy of Exceptional Hospitality
+                A Legacy of Spiritual Hospitality
               </h2>
               <p className="text-muted-foreground leading-relaxed mb-6">
                 {hotelInfo.description}
               </p>
               <p className="text-muted-foreground leading-relaxed mb-6">
-                Founded with a vision to redefine luxury hospitality, Shri Balaji  has 
-                become a sanctuary for discerning travelers seeking an extraordinary escape. 
-                Our commitment to excellence is reflected in every detail, from our meticulously 
-                designed rooms to our world-class amenities.
+                Founded with a vision to provide authentic Indian hospitality to pilgrims and travelers
+                visiting the sacred city of Ujjain, Shri Balaji Home Stay has become a sanctuary for
+                those seeking spiritual rejuvenation and cultural experiences. Our commitment to traditional
+                values is reflected in every detail, from our culturally inspired decor to our personalized service.
               </p>
               <p className="text-muted-foreground leading-relaxed">
-                Our dedicated team of hospitality professionals ensures that every guest 
-                experience is personalized and memorable. Whether you're here for a romantic 
-                getaway, a family vacation, or a business retreat, we promise an unforgettable stay.
+                Our dedicated family ensures that every guest experience is warm, authentic, and memorable.
+                Whether you're here for spiritual pilgrimage, cultural exploration, or simply to experience
+                the heart of Madhya Pradesh, we promise an unforgettable stay filled with traditional hospitality.
               </p>
             </motion.div>
 
@@ -117,27 +117,27 @@ const About: React.FC = () => {
             className="text-center mb-12"
           >
             <span className="text-gold font-medium mb-2 block">OUR VALUES</span>
-            <h2 className="heading-section text-foreground">What Sets Us Apart</h2>
+            <h2 className="heading-section text-foreground">What Makes Us Special</h2>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {[
-              {
-                title: 'Uncompromising Quality',
-                description: 'From the thread count of our linens to the selection of our spa products, we never settle for anything less than exceptional.',
-                image: spaImage
-              },
-              {
-                title: 'Personalized Service',
-                description: 'Our dedicated concierge team anticipates your needs and crafts bespoke experiences tailored to your preferences.',
-                image: restaurantImage
-              },
-              {
-                title: 'Sustainable Luxury',
-                description: 'We believe luxury and sustainability can coexist. Our eco-friendly practices ensure a greener future without compromising comfort.',
-                image: heroImage
-              }
-            ].map((value, index) => (
+         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+           {[
+             {
+               title: 'Authentic Hospitality',
+               description: 'Experience genuine Indian hospitality with traditional values, warm family atmosphere, and personalized care that makes you feel at home.',
+               image: spaImage
+             },
+             {
+               title: 'Spiritual Guidance',
+               description: 'Our local experts provide authentic guidance for temple visits, rituals, and cultural experiences in the sacred city of Ujjain.',
+               image: restaurantImage
+             },
+             {
+               title: 'Cultural Immersion',
+               description: 'Immerse yourself in rich Indian traditions, local cuisine, and cultural performances that showcase the heritage of Madhya Pradesh.',
+               image: heroImage
+             }
+           ].map((value, index) => (
               <motion.div
                 key={value.title}
                 initial={{ opacity: 0, y: 20 }}

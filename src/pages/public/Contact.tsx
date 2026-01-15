@@ -78,8 +78,8 @@ const Contact: React.FC = () => {
               Contact Us
             </h1>
             <p className="text-primary-foreground/80 text-lg max-w-2xl mx-auto">
-              Have questions or special requests? Our team is here to help you plan 
-              the perfect stay at Shri Balaji .
+              Have questions about your pilgrimage or need assistance with temple visits?
+              Our team at Shri Balaji Home Stay in Ujjain is here to help.
             </p>
           </motion.div>
         </div>
@@ -100,8 +100,9 @@ const Contact: React.FC = () => {
                 Get in Touch
               </h2>
               <p className="text-muted-foreground mb-8">
-                We'd love to hear from you. Whether you have a question about our rooms, 
-                amenities, or anything else, our team is ready to answer all your questions.
+                We'd love to hear from you. Whether you have questions about temple timings,
+                local transportation, or need assistance with your spiritual journey in Ujjain,
+                our team is ready to help with traditional hospitality.
               </p>
 
               <div className="space-y-6">

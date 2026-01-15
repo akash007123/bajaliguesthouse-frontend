@@ -26,11 +26,11 @@ import executiveImage from '@/assets/room-executive.jpg';
 import presidentialImage from '@/assets/room-presidential.jpg';
 
 const amenities = [
-  { name: 'Free WiFi', icon: Wifi, description: 'High-speed internet throughout the property' },
-  { name: 'Room Service', icon: Coffee, description: '24/7 in-room dining service' },
-  { name: 'Valet Parking', icon: Car, description: 'Complimentary secure parking' },
-  { name: '24/7 Concierge', icon: Clock, description: 'Round-the-clock assistance for all your needs' },
-  { name: 'Prime Location', icon: MapPin, description: 'Conveniently located in the heart of the city' },
+  { name: 'Temple Tours', icon: MapPin, description: 'Guided tours to Mahakaleshwar and other sacred sites' },
+  { name: 'Traditional Meals', icon: Utensils, description: 'Authentic Indian cuisine with local specialties' },
+  { name: 'Cultural Experiences', icon: Users, description: 'Traditional music, dance, and cultural performances' },
+  { name: '24/7 Support', icon: Clock, description: 'Round-the-clock assistance for pilgrims and guests' },
+  { name: 'Spiritual Guidance', icon: Award, description: 'Local guides for temple rituals and ceremonies' },
 ];
 
 const Home: React.FC = () => {
@@ -114,10 +114,10 @@ const Home: React.FC = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.8, duration: 0.8 }}
             >
-              Experience Luxury
+              Welcome to Ujjain
               <br />
               <span className="text-gold bg-gradient-to-r from-gold to-gold-light bg-clip-text text-transparent">
-                Beyond Compare
+                Shri Balaji Home Stay
               </span>
             </motion.h1>
             <motion.p
@@ -126,7 +126,7 @@ const Home: React.FC = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 1.2, duration: 0.8 }}
             >
-              {hotelInfo?.description || 'Discover unparalleled elegance and comfort at Shri Balaji, where every moment is crafted for your indulgence.'}
+              {hotelInfo?.description || 'Experience authentic Indian hospitality at Shri Balaji Home Stay in Ujjain, Madhya Pradesh. Your spiritual journey begins here with traditional warmth and modern comfort.'}
             </motion.p>
             <motion.div
               className="flex flex-col sm:flex-row items-center justify-center gap-6"
@@ -174,10 +174,10 @@ const Home: React.FC = () => {
         <div className="container-hotel">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {[
-              { icon: Users, value: '5000+', label: 'Happy Guests', color: 'text-gold' },
-              { icon: Award, value: '15+', label: 'Years of Excellence', color: 'text-gold' },
-              { icon: Clock, value: '24/7', label: 'Concierge Service', color: 'text-gold' },
-              { icon: MapPin, value: 'Prime', label: 'Location', color: 'text-gold' }
+              { icon: Users, value: '2000+', label: 'Pilgrims Served', color: 'text-gold' },
+              { icon: Award, value: '10+', label: 'Years of Service', color: 'text-gold' },
+              { icon: Clock, value: '24/7', label: 'Spiritual Support', color: 'text-gold' },
+              { icon: MapPin, value: 'Ujjain', label: 'Heart of MP', color: 'text-gold' }
             ].map((stat, index) => (
               <motion.div
                 key={stat.label}
@@ -508,7 +508,7 @@ const Home: React.FC = () => {
               transition={{ delay: 0.4 }}
               className="heading-section text-white mb-6"
             >
-              Ready to Experience Luxury?
+              Ready for Your Ujjain Journey?
             </motion.h2>
             <motion.p
               initial={{ opacity: 0, y: 20 }}
@@ -517,8 +517,8 @@ const Home: React.FC = () => {
               transition={{ delay: 0.6 }}
               className="text-white/90 text-lg md:text-xl mb-10 max-w-3xl mx-auto leading-relaxed"
             >
-              Book your stay at Shri Balaji and discover a world of unparalleled
-              comfort and sophistication. Your journey to luxury begins here.
+              Book your stay at Shri Balaji Home Stay and experience the spiritual
+              heart of India. Your sacred journey in Ujjain begins here.
             </motion.p>
             <motion.div
               initial={{ opacity: 0, y: 20 }}

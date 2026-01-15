@@ -173,7 +173,7 @@ const AdminAddRoom: React.FC = () => {
           <h1 className="text-3xl md:text-4xl font-serif font-bold mb-2 bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent">
             Add New Room
           </h1>
-          <p className="text-muted-foreground text-lg">Create a new room listing for the hotel</p>
+          <p className="text-muted-foreground text-lg">Create a new room listing for the homestay</p>
         </div>
       </motion.div>
 
