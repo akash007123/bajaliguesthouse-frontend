@@ -45,6 +45,7 @@ const adminNavItems: NavItem[] = [
   { name: "Custom", path: "/admin/dashboard/rooms/custom", icon: Bed },
   { name: "Staff", path: "/admin/dashboard/rooms/staff", icon: Computer },
   { name: "Revenue", path: "/admin/dashboard/rooms/revenue", icon: BadgeIndianRupee },
+  { name: "Users List", path: "/admin/dashboard/users", icon: MessageSquareHeart },
   { name: "Reviews", path: "/admin/dashboard/reviews", icon: MessageSquareHeart },
   { name: "Profile", path: "/admin/dashboard/profile", icon: User },
 ];
@@ -100,9 +101,17 @@ export const DashboardLayout: React.FC = () => {
         scrollableContainerRef.current.scrollTop = scrollPositionRef.current;
       }
     }, 50);
-    
+
     return () => clearTimeout(timer);
   }, [sidebarOpen]);
+
+  // Check user status and logout if inactive
+  useEffect(() => {
+    if (user && user.status && user.status !== 'active') {
+      logout();
+      navigate('/');
+    }
+  }, [user, logout, navigate]);
 
   const NavContent = () => (
     <>
@@ -198,9 +207,13 @@ export const DashboardLayout: React.FC = () => {
               <span>Account Status</span>
               <Badge
                 variant="outline"
-                className="text-emerald-500 border-emerald-500/30"
+                className={cn(
+                  (user?.status === 'active' || !user?.status)
+                    ? "text-emerald-500 border-emerald-500/30"
+                    : "text-red-500 border-red-500/30"
+                )}
               >
-                Active
+                {user?.status || 'Active'}
               </Badge>
             </div>
           </div>

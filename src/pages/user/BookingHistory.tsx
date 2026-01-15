@@ -743,7 +743,7 @@ const BookingHistory: React.FC = () => {
             {/* Hotel Header */}
             <div className="text-center border-b pb-4">
               <div className="mb-4">
-                <h1 className="text-3xl font-bold">Shri Bajali Guest House</h1>
+                <h1 className="text-3xl font-bold">Shri Bajali Home Stay</h1>
                 <p className="text-sm text-muted-foreground">123 Main Street, City, State, PIN 123456</p>
                 <p className="text-sm text-muted-foreground">Phone: +91 9876543210 | Email: info@shribajali.com</p>
               </div>

@@ -10,6 +10,7 @@ export interface User {
   address?: string;
   profilePicture?: string;
   role: UserRole;
+  status: 'active' | 'inactive';
 }
 
 interface AuthContextType {

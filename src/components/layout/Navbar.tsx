@@ -38,12 +38,12 @@ export const Navbar: React.FC = () => {
           {/* Logo */}
           <Link to="/" className=" items-center space-x-2">
             {/* <span className="text-2xl font-serif font-bold text-primary">Shri Balaji</span> */}
-            {/* <p className='text-[15px]'>Guest House</p> */}
+            {/* <p className='text-[15px]'>Home Stay</p> */}
             <div className="flex gap-2">
-              <img src="./icon.png" className='w-16' alt="" />
+              <img src="./icon.png" className='w-16' alt="logo" />
               <div className="text">                
                 <span className="text-2xl font-serif font-bold text-primary">Shri Balaji</span>
-                <p className='text-[15px]'>Guest House</p>
+                <p className='text-[15px]'>Home Stay</p>
               </div>
             </div>                         
           </Link>

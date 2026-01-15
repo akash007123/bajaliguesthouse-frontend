@@ -57,6 +57,17 @@ export interface StaffMember {
   updatedAt: string;
 }
 
+export interface User {
+  _id: string;
+  name: string;
+  email: string;
+  mobile?: string;
+  address?:string;
+  profilePicture?: string;
+  status: 'active' | 'inactive';
+  createdAt: string;
+}
+
 export interface Review {
   id: string;
   bookingId: string;

@@ -35,6 +35,7 @@ import AdminEditRoom from "./pages/admin/AdminEditRoom";
 import AdminCustomBooking from "./pages/admin/AdminCustomBooking";
 import RevenueDashboard from "./pages/admin/RevenueDashboard";
 import Staff from "./pages/admin/Staff";
+import Users from "./pages/admin/Users";
 import AdminReviews from "./pages/admin/AdminReviews";
 
 import NotFound from "./pages/NotFound";
@@ -82,6 +83,7 @@ const App = () => (
               <Route path="rooms/custom" element={<AdminCustomBooking />} />
               <Route path="rooms/revenue" element={<RevenueDashboard />} />
               <Route path="rooms/staff" element={<Staff />} />
+              <Route path="users" element={<Users />} />
               <Route path="reviews" element={<AdminReviews />} />
               <Route path="profile" element={<UserProfile />} />
             </Route>
