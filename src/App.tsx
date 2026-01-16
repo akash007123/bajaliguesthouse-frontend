@@ -38,6 +38,9 @@ import RevenueDashboard from "./pages/admin/RevenueDashboard";
 import Staff from "./pages/admin/Staff";
 import Users from "./pages/admin/Users";
 import AdminReviews from "./pages/admin/AdminReviews";
+import AdminDarshans from "./pages/admin/AdminDarshans";
+import AdminAddDarshan from "./pages/admin/AdminAddDarshan";
+import AdminEditDarshan from "./pages/admin/AdminEditDarshan";
 
 import NotFound from "./pages/NotFound";
 
@@ -87,6 +90,9 @@ const App = () => (
               <Route path="rooms/staff" element={<Staff />} />
               <Route path="users" element={<Users />} />
               <Route path="reviews" element={<AdminReviews />} />
+              <Route path="darshans" element={<AdminDarshans />} />
+              <Route path="darshans/add" element={<AdminAddDarshan />} />
+              <Route path="darshans/edit/:id" element={<AdminEditDarshan />} />
               <Route path="profile" element={<UserProfile />} />
             </Route>
 

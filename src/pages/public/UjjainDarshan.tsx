@@ -1,44 +1,28 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { MapPin, Clock, Star, Camera } from 'lucide-react';
 
 const UjjainDarshan: React.FC = () => {
-  const attractions = [
-    {
-      name: 'Mahakaleshwar Temple',
-      description: 'One of the twelve Jyotirlingas, this ancient temple is dedicated to Lord Shiva and is a major pilgrimage site.',
-      image: 'https://images.unsplash.com/photo-1582515073490-39981397c445?w=800&h=600&fit=crop',
-      rating: 4.8,
-      time: '6:00 AM - 10:00 PM',
-      location: 'Mahakal Lok, Ujjain'
-    },
-    {
-      name: 'Ram Ghat',
-      description: 'A sacred bathing ghat on the banks of the Shipra River, known for its spiritual significance and evening aarti.',
-      image: 'https://images.unsplash.com/photo-1587135941948-670b381f08ce?w=800&h=600&fit=crop',
-      rating: 4.6,
-      time: '5:00 AM - 9:00 PM',
-      location: 'Ram Ghat, Ujjain'
-    },
-    {
-      name: 'Kaliadeh Palace',
-      description: 'A historic palace built by Raja Jai Singh, offering panoramic views of the Shipra River and the ghats.',
-      image: 'https://images.unsplash.com/photo-1587135941948-670b381f08ce?w=800&h=600&fit=crop',
-      rating: 4.5,
-      time: '9:00 AM - 6:00 PM',
-      location: 'Kaliadeh Palace, Ujjain'
-    },
-    {
-      name: 'Bhartrihari Caves',
-      description: 'Ancient caves associated with the legendary poet Bhartrihari, offering a glimpse into ancient Indian history.',
-      image: 'https://images.unsplash.com/photo-1582515073490-39981397c445?w=800&h=600&fit=crop',
-      rating: 4.3,
-      time: '9:00 AM - 5:00 PM',
-      location: 'Bhartrihari Caves, Ujjain'
-    }
-  ];
+  const [attractions, setAttractions] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchDarshans = async () => {
+      try {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/darshans`);
+        const data = await response.json();
+        setAttractions(data);
+      } catch (error) {
+        console.error('Error fetching darshans:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDarshans();
+  }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50">
@@ -71,7 +55,7 @@ const UjjainDarshan: React.FC = () => {
             </button>
           </motion.div>
         </motion.div>
-        <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1587135941948-670b381f08ce?w=1920&h=1080&fit=crop)' }} />
+        <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: 'url(https://hotelimperialujjain.com/wp-content/uploads/2022/12/Mahalok-1.jpg)' }} />
       </section>
 
       {/* Introduction Section */}
@@ -153,7 +137,17 @@ const UjjainDarshan: React.FC = () => {
           </motion.div>
 
           <div className="grid md:grid-cols-2 gap-8">
-            {attractions.map((attraction, index) => (
+            {loading ? (
+              <div className="col-span-2 text-center py-12">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500 mx-auto"></div>
+                <p className="mt-4 text-gray-600">Loading attractions...</p>
+              </div>
+            ) : attractions.length === 0 ? (
+              <div className="col-span-2 text-center py-12">
+                <p className="text-gray-600">No attractions available at the moment.</p>
+              </div>
+            ) : (
+              attractions.map((attraction, index) => (
               <motion.div
                 key={attraction.name}
                 initial={{ opacity: 0, y: 50 }}
@@ -190,7 +184,7 @@ const UjjainDarshan: React.FC = () => {
                   </CardContent>
                 </Card>
               </motion.div>
-            ))}
+            )))}
           </div>
         </div>
       </section>
