@@ -5,7 +5,7 @@ import { Separator } from '@/components/ui/separator';
 import { Booking } from '@/types';
 import { StatusBadge } from '@/components/common/StatusBadge';
 import { Calendar, User, Building, Users, Clock, MessageSquare } from 'lucide-react';
-import { formatDate } from '../../utils/common';
+import { formatDate } from '@/utils/common';
 
 interface ViewBookingModalProps {
   booking: Booking | null;

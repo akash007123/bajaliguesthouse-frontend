@@ -81,7 +81,7 @@ const AdminRooms: React.FC = () => {
 
   const toggleAvailabilityMutation = useMutation({
     mutationFn: ({ id, available }: { id: string; available: boolean }) =>
-      fetch(`${import.meta.env.VITE_API_URL}/admin/rooms/${id}/availability`, {
+      fetch(`${import.meta.env.VITE_API_URL}/admin/rooms/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

@@ -18,7 +18,7 @@ import { Badge } from '@/components/ui/badge';
 import { CalendarDays, Users, Star, MapPin, DollarSign, Bed, Clock, Shield, Calendar, MessageSquare, CheckCircle } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { formatDate } from '../../utils/common';
+import { formatDate } from '@/utils/common';
 
 const bookingSchema = z.object({
   roomId: z.string().min(1, 'Please select a room'),

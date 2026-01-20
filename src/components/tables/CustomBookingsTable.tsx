@@ -13,7 +13,7 @@ import {
   Edit,
   Trash2
 } from 'lucide-react';
-import {formatDate} from '../../utils/common';
+import { formatDate } from '@/utils/common';
 
 interface CustomBooking {
   id: string;

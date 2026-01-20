@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import { useQuery } from '@tanstack/react-query';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
-import { formatDate } from '../../utils/common';
+import { formatDate } from '@/utils/common';
 
 const UserDashboard: React.FC = () => {
   const { user } = useAuth();

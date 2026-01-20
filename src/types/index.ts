@@ -58,14 +58,15 @@ export interface StaffMember {
 }
 
 export interface User {
-  _id: string;
+  id: string;
   name: string;
   email: string;
   mobile?: string;
-  address?:string;
+  address?: string;
   profilePicture?: string;
+  role: 'user' | 'admin';
   status: 'active' | 'inactive';
-  createdAt: string;
+  createdAt?: string;
 }
 
 export interface Review {

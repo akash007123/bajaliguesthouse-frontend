@@ -1,6 +1,6 @@
 import React from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import {formatDateTime} from '../../utils/common';
+import { formatDateTime } from '@/utils/common';
 
 interface CustomBooking {
   id: string;
