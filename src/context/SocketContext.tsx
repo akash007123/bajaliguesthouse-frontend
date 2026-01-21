@@ -4,6 +4,7 @@ import { useAuth } from './AuthContext';
 
 interface Notification {
   id: string;
+  userId?: string;
   userName?: string;
   roomName: string;
   checkIn: string;
@@ -42,6 +43,12 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
       newSocket.on('newBooking', (notification: Notification) => {
         if (user.role === 'admin') {
+          addNotification(notification);
+        }
+      });
+
+      newSocket.on('bookingApproved', (notification: Notification) => {
+        if (user.role === 'user' && notification.userId === user.id) {
           addNotification(notification);
         }
       });

@@ -7,6 +7,7 @@ import { Bell, Calendar, User, IndianRupee, CheckCircle } from 'lucide-react';
 
 interface Notification {
   id: string;
+  userId?: string;
   userName?: string;
   roomName: string;
   checkIn: string;
