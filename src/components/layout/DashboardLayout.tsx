@@ -21,9 +21,11 @@ import {
   MapPin
 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
+import { useSocket } from "@/context/SocketContext";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
+import NotificationsModal from "@/components/common/NotificationsModal";
 
 interface NavItem {
   name: string;
@@ -55,9 +57,11 @@ const adminNavItems: NavItem[] = [
 export const DashboardLayout: React.FC = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [notificationsOpen, setNotificationsOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   const { user, logout } = useAuth();
+  const { notifications, clearNotifications } = useSocket();
   
   // Ref for the scrollable container
   const scrollableContainerRef = useRef<HTMLDivElement>(null);
@@ -248,6 +252,7 @@ export const DashboardLayout: React.FC = () => {
             onClick={() => {
               // Save scroll position before showing alerts/modal
               saveScrollPosition();
+              setNotificationsOpen(true);
             }}
             className={cn(
               "flex-1 text-sidebar-foreground border-sidebar-border hover:bg-sidebar-accent hover:text-sidebar-foreground relative",
@@ -256,7 +261,9 @@ export const DashboardLayout: React.FC = () => {
           >
             <Bell className="w-4 h-4" />
             {sidebarOpen && <span className="ml-2">Alerts</span>}
-            <span className="absolute -top-1 -right-1 w-2 h-2 bg-rose-500 rounded-full"></span>
+            {notifications.length > 0 && (
+              <span className="absolute -top-1 -right-1 w-2 h-2 bg-rose-500 rounded-full"></span>
+            )}
           </Button>
         </div>
 
@@ -361,6 +368,13 @@ export const DashboardLayout: React.FC = () => {
           <Outlet />
         </div>
       </main>
+
+      <NotificationsModal
+        notifications={notifications}
+        isOpen={notificationsOpen}
+        onClose={() => setNotificationsOpen(false)}
+        onClearAll={clearNotifications}
+      />
     </div>
   );
 };
