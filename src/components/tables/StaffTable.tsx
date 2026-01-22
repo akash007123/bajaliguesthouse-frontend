@@ -42,7 +42,7 @@ const StaffTable: React.FC<StaffTableProps> = ({ staffList, loading, onEdit, onD
       render: (staff: StaffMember) => (
         <div className="flex items-center gap-3">
           <Avatar className="h-9 w-9 border border-border/50">
-            <AvatarImage src={staff.profilePic?.[0] || ''} alt={staff.name} />
+            <AvatarImage src={staff.profilePic || ''} alt={staff.name} />
             <AvatarFallback className="bg-primary/5 text-primary">
               {staff.name?.slice(0, 2).toUpperCase() || <User className="w-4 h-4" />}
             </AvatarFallback>
