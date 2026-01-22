@@ -6,6 +6,7 @@ import { EditStaffModal } from '@/components/forms/EditStaffModal.tsx';
 import StaffTable from '@/components/tables/StaffTable';
 import ViewStaffModal from '@/components/common/ViewStaffModal';
 import { StaffMember } from '@/types/index';
+import { motion } from 'framer-motion';
 
 interface StaffFormData {
   name: string;
@@ -41,7 +42,7 @@ const Staff: React.FC = () => {
   const fetchStaff = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('/api/admin/staff', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/admin/staff`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -51,8 +52,6 @@ const Staff: React.FC = () => {
         setStaffList(data);
       } else {
         console.error('Failed to fetch staff, status:', response.status);
-        const errorText = await response.text();
-        console.error('Error response:', errorText);
       }
     } catch (error) {
       console.error('Error fetching staff:', error);
@@ -86,7 +85,7 @@ const Staff: React.FC = () => {
   const handleDeleteStaff = async (id: string) => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`/api/admin/staff/${id}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/admin/staff/${id}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -103,15 +102,22 @@ const Staff: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="space-y-8"
+    >
+      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Staff Management</h1>
-          <p className="text-muted-foreground">Manage homestay staff members</p>
+          <h1 className="text-3xl font-serif font-bold text-foreground">Staff Management</h1>
+          <p className="text-muted-foreground mt-1">Manage homestay staff members, roles, and details.</p>
         </div>
-        <Button onClick={() => setIsModalOpen(true)}>
+        <Button
+          onClick={() => setIsModalOpen(true)}
+          className="bg-gold hover:bg-gold-dark text-white shadow-lg hover:shadow-xl transition-all"
+        >
           <Plus className="w-4 h-4 mr-2" />
-          Add Staff
+          Add New Staff
         </Button>
       </div>
 
@@ -149,7 +155,7 @@ const Staff: React.FC = () => {
         }}
         staff={selectedStaffForView}
       />
-    </div>
+    </motion.div>
   );
 };
 

@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { BadgeIndianRupee, CalendarIcon, RefreshCw, Search, ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react';
+import { BadgeIndianRupee, CalendarIcon, RefreshCw, Search, ArrowUpDown, ArrowUp, ArrowDown, Download, TrendingUp } from 'lucide-react';
 import { format } from 'date-fns';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line, AreaChart, Area } from 'recharts';
 import { useQuery } from '@tanstack/react-query';
 import { DataTable } from '@/components/tables/DataTable';
+import { motion } from 'framer-motion';
 
 interface CustomBooking {
   id: string;
@@ -21,19 +22,17 @@ interface CustomBooking {
 }
 
 const RevenueDashboard: React.FC = () => {
-  const [revenueType, setRevenueType] = useState('day');
+  const [revenueType, setRevenueType] = useState('month');
   const [fromDate, setFromDate] = useState<Date>();
   const [toDate, setToDate] = useState<Date>();
   const [search, setSearch] = useState('');
   const [sortBy, setSortBy] = useState('createdAt');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
   const [page, setPage] = useState(1);
-  const [dateError, setDateError] = useState('');
   const [bookingFromDate, setBookingFromDate] = useState<Date>();
   const [bookingToDate, setBookingToDate] = useState<Date>();
-  const [bookingDateError, setBookingDateError] = useState('');
 
-  const { data, refetch, isLoading } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ['revenue', revenueType, fromDate, toDate],
     queryFn: async () => {
       const params = new URLSearchParams({ type: revenueType });
@@ -71,46 +70,9 @@ const RevenueDashboard: React.FC = () => {
     },
   });
 
-  const handleReset = () => {
-    setRevenueType('day');
-    setFromDate(undefined);
-    setToDate(undefined);
-    setSearch('');
-    setSortBy('createdAt');
-    setSortOrder('desc');
-    setPage(1);
-    // Dates will be set by useEffect
-  };
-
-  const handleBookingReset = () => {
-    setBookingFromDate(undefined);
-    setBookingToDate(undefined);
-    setSearch('');
-    setSortBy('createdAt');
-    setSortOrder('desc');
-    setPage(1);
-  };
-
-  const formatCurrency = (amount: number) => `₹${amount.toLocaleString()}`;
-
+  // Date Logic Effect (Simplified)
   useEffect(() => {
-    if (fromDate && toDate && fromDate > toDate) {
-      setDateError('From date must be before or equal to To date');
-    } else {
-      setDateError('');
-    }
-  }, [fromDate, toDate]);
-
-  useEffect(() => {
-    if (bookingFromDate && bookingToDate && bookingFromDate > bookingToDate) {
-      setBookingDateError('From date must be before or equal to To date');
-    } else {
-      setBookingDateError('');
-    }
-  }, [bookingFromDate, bookingToDate]);
-
-  useEffect(() => {
-    if (fromDate && toDate) return; // Don't override if dates are already set
+    if (fromDate && toDate) return;
     const now = new Date();
     if (revenueType === 'day') {
       const start = new Date(now.getFullYear(), now.getMonth(), now.getDate());
@@ -147,280 +109,232 @@ const RevenueDashboard: React.FC = () => {
   };
 
   const columns = [
-    { key: 'id', header: 'Booking ID', render: (item: CustomBooking) => item.id },
-    { key: 'name', header: 'Customer Name' },
+    { key: 'id', header: 'Booking ID', render: (item: CustomBooking) => <span className="font-mono text-xs">{item.id.slice(0, 8)}...</span> },
+    { key: 'name', header: 'Customer Name', render: (item: CustomBooking) => <div className="font-medium">{item.name}</div> },
     {
       key: 'createdAt',
       header: (
-        <Button variant="ghost" onClick={() => handleSort('createdAt')} className="h-auto p-0 font-semibold">
-          Booking Date
-          {sortBy === 'createdAt' ? (
-            sortOrder === 'asc' ? <ArrowUp className="ml-1 h-4 w-4" /> : <ArrowDown className="ml-1 h-4 w-4" />
-          ) : (
-            <ArrowUpDown className="ml-1 h-4 w-4" />
+        <Button variant="ghost" onClick={() => handleSort('createdAt')} className="h-auto p-0 font-semibold hover:bg-transparent">
+          Date
+          {sortBy === 'createdAt' && (
+            sortOrder === 'asc' ? <ArrowUp className="ml-1 h-3 w-3" /> : <ArrowDown className="ml-1 h-3 w-3" />
           )}
         </Button>
       ),
-      render: (item: CustomBooking) => format(new Date(item.createdAt), 'PPP')
+      render: (item: CustomBooking) => format(new Date(item.createdAt), 'MMM dd, yyyy')
     },
-    { key: 'checkIn', header: 'Check-in Date', render: () => 'N/A' },
-    { key: 'checkOut', header: 'Check-out Date', render: () => 'N/A' },
     {
       key: 'amount',
-      header: (
-        <Button variant="ghost" onClick={() => handleSort('roomAmount')} className="h-auto p-0 font-semibold">
-          Amount
-          {sortBy === 'roomAmount' ? (
-            sortOrder === 'asc' ? <ArrowUp className="ml-1 h-4 w-4" /> : <ArrowDown className="ml-1 h-4 w-4" />
-          ) : (
-            <ArrowUpDown className="ml-1 h-4 w-4" />
-          )}
-        </Button>
-      ),
-      render: (item: CustomBooking) => formatCurrency(item.roomAmount * item.numberOfRooms)
+      header: 'Amount',
+      className: 'text-right',
+      render: (item: CustomBooking) => <div className="text-right font-medium text-emerald-600">₹{(item.roomAmount * item.numberOfRooms).toLocaleString()}</div>
     },
   ];
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    show: { opacity: 1, transition: { staggerChildren: 0.1 } },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    show: { opacity: 1, y: 0 },
+  };
+
   return (
-    <div className="p-6 space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold">Revenue Dashboard</h1>
+    <motion.div
+      initial="hidden"
+      animate="show"
+      variants={containerVariants}
+      className="space-y-8"
+    >
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <div>
+          <h1 className="text-3xl font-serif font-bold text-foreground">Revenue Analytics</h1>
+          <p className="text-muted-foreground mt-1">Track financial performance and growth.</p>
+        </div>
+        <div className="flex items-center gap-2">
+          <Button variant="outline" size="sm" className="gap-2">
+            <Download className="w-4 h-4" />
+            Export Report
+          </Button>
+        </div>
       </div>
-
-      {/* Filters */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Filters</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div>
-              <label className="text-sm font-medium">Revenue Type</label>
-              <Select value={revenueType} onValueChange={setRevenueType}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="day">Day</SelectItem>
-                  <SelectItem value="week">Week</SelectItem>
-                  <SelectItem value="month">Month</SelectItem>
-                  <SelectItem value="year">Year</SelectItem>
-                  <SelectItem value="custom">Custom</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div>
-              <label className="text-sm font-medium">From Date</label>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button variant="outline" className="w-full justify-start text-left font-normal">
-                    <CalendarIcon className="mr-2 h-4 w-4" />
-                    {fromDate ? format(fromDate, 'PPP') : 'Pick a date'}
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0">
-                  <Calendar mode="single" selected={fromDate} onSelect={setFromDate} initialFocus />
-                </PopoverContent>
-              </Popover>
-            </div>
-
-            <div>
-              <label className="text-sm font-medium">To Date</label>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button variant="outline" className="w-full justify-start text-left font-normal">
-                    <CalendarIcon className="mr-2 h-4 w-4" />
-                    {toDate ? format(toDate, 'PPP') : 'Pick a date'}
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0">
-                  <Calendar mode="single" selected={toDate} onSelect={setToDate} initialFocus />
-                </PopoverContent>
-              </Popover>
-            </div>
-
-            {dateError && (
-              <div className="col-span-full text-red-500 text-sm">{dateError}</div>
-            )}
-
-            <div className="flex items-end">
-              <Button onClick={handleReset} variant="outline" className="w-full">
-                <RefreshCw className="mr-2 h-4 w-4" />
-                Reset Filters
-              </Button>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
 
       {/* KPI Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <Card className="bg-gradient-to-r from-blue-500 to-blue-600 text-white">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Today's Revenue</CardTitle>
-            <BadgeIndianRupee className="h-4 w-4" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{isLoading ? '...' : formatCurrency(data?.kpis?.today || 0)}</div>
-          </CardContent>
-        </Card>
+      <motion.div variants={containerVariants} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {[
+          { label: "Today's Revenue", value: data?.kpis?.today, color: "from-blue-500 to-blue-600" },
+          { label: "This Week", value: data?.kpis?.thisWeek, color: "from-emerald-500 to-emerald-600" },
+          { label: "This Month", value: data?.kpis?.thisMonth, color: "from-amber-500 to-amber-600" },
+          { label: "This Year", value: data?.kpis?.thisYear, color: "from-purple-500 to-purple-600" },
+        ].map((kpi, i) => (
+          <motion.div key={i} variants={itemVariants} whileHover={{ y: -5 }}>
+            <Card className="overflow-hidden border-none shadow-md group relative">
+              <div className={`absolute inset-0 bg-gradient-to-br ${kpi.color} opacity-90 group-hover:opacity-100 transition-opacity`} />
+              <div className="absolute -right-6 -top-6 w-24 h-24 bg-white/20 rounded-full blur-2xl group-hover:bg-white/30 transition-colors" />
+              <CardContent className="p-6 relative z-10 text-white">
+                <p className="text-sm font-medium text-white/80 mb-2">{kpi.label}</p>
+                <div className="text-3xl font-bold flex items-baseline gap-1">
+                  <span className="text-xl opacity-70">₹</span>
+                  {isLoading ? '...' : (kpi.value || 0).toLocaleString()}
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+        ))}
+      </motion.div>
 
-        <Card className="bg-gradient-to-r from-green-500 to-green-600 text-white">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">This Week Revenue</CardTitle>
-            <BadgeIndianRupee className="h-4 w-4" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{isLoading ? '...' : formatCurrency(data?.kpis?.thisWeek || 0)}</div>
-          </CardContent>
-        </Card>
+      {/* Charts Section */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Main Chart */}
+        <motion.div variants={itemVariants} className="lg:col-span-2">
+          <Card className="h-full border-border/50 shadow-sm">
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <div>
+                <CardTitle>Revenue Trends</CardTitle>
+                <CardDescription>Income overtime visualization</CardDescription>
+              </div>
+              <Select value={revenueType} onValueChange={setRevenueType}>
+                <SelectTrigger className="w-32 h-8 text-xs">
+                  <SelectValue placeholder="Period" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="week">Weekly</SelectItem>
+                  <SelectItem value="month">Monthly</SelectItem>
+                  <SelectItem value="year">Yearly</SelectItem>
+                </SelectContent>
+              </Select>
+            </CardHeader>
+            <CardContent className="pt-4">
+              <div className="h-[300px] w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <AreaChart data={data?.chartData || []}>
+                    <defs>
+                      <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="#d97706" stopOpacity={0.2} />
+                        <stop offset="95%" stopColor="#d97706" stopOpacity={0} />
+                      </linearGradient>
+                    </defs>
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--border))" />
+                    <XAxis
+                      dataKey="date"
+                      stroke="hsl(var(--muted-foreground))"
+                      fontSize={12}
+                      tickLine={false}
+                      axisLine={false}
+                    />
+                    <YAxis
+                      stroke="hsl(var(--muted-foreground))"
+                      fontSize={12}
+                      tickLine={false}
+                      axisLine={false}
+                      tickFormatter={(value) => `₹${value / 1000}k`}
+                    />
+                    <Tooltip
+                      contentStyle={{
+                        backgroundColor: 'hsl(var(--card))',
+                        border: '1px solid hsl(var(--border))',
+                        borderRadius: '8px'
+                      }}
+                      itemStyle={{ color: 'hsl(var(--foreground))' }}
+                      formatter={(value: number) => [`₹${value.toLocaleString()}`, 'Revenue']}
+                    />
+                    <Area
+                      type="monotone"
+                      dataKey="revenue"
+                      stroke="#d97706"
+                      strokeWidth={2}
+                      fillOpacity={1}
+                      fill="url(#colorRevenue)"
+                    />
+                  </AreaChart>
+                </ResponsiveContainer>
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
 
-        <Card className="bg-gradient-to-r from-purple-500 to-purple-600 text-white">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">This Month Revenue</CardTitle>
-            <BadgeIndianRupee className="h-4 w-4" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{isLoading ? '...' : formatCurrency(data?.kpis?.thisMonth || 0)}</div>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-gradient-to-r from-orange-500 to-orange-600 text-white">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">This Year Revenue</CardTitle>
-            <BadgeIndianRupee className="h-4 w-4" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{isLoading ? '...' : formatCurrency(data?.kpis?.thisYear || 0)}</div>
-          </CardContent>
-        </Card>
+        {/* Breakdown Chart */}
+        <motion.div variants={itemVariants}>
+          <Card className="h-full border-border/50 shadow-sm">
+            <CardHeader>
+              <CardTitle>Sources</CardTitle>
+              <CardDescription>Revenue by category</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="h-[300px] w-full flex items-center justify-center">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={data?.chartData ? data.chartData.slice(0, 7) : []}>
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--border))" />
+                    <XAxis dataKey="date" hide />
+                    <Tooltip cursor={{ fill: 'transparent' }} />
+                    <Bar dataKey="revenue" fill="hsl(var(--navy))" radius={[4, 4, 0, 0]} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
       </div>
 
-      {/* Charts */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card>
-          <CardHeader>
-            <CardTitle>Revenue Trend</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <ResponsiveContainer width="100%" height={300}>
-              <LineChart data={data?.chartData || []}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="date" />
-                <YAxis />
-                <Tooltip formatter={(value) => formatCurrency(value as number)} />
-                <Line type="monotone" dataKey="revenue" stroke="#8884d8" strokeWidth={2} />
-              </LineChart>
-            </ResponsiveContainer>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Revenue Breakdown</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={data?.chartData || []}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="date" />
-                <YAxis />
-                <Tooltip formatter={(value) => formatCurrency(value as number)} />
-                <Bar dataKey="revenue" fill="#82ca9d" />
-              </BarChart>
-            </ResponsiveContainer>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Total Revenue Card */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Total Revenue for Selected Period</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="text-3xl font-bold text-center">
-            {isLoading ? '...' : formatCurrency(data?.totalRevenue || 0)}
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Booking Table */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Custom Bookings</CardTitle>
-          <div className="space-y-4">
-            <div className="flex items-center space-x-2">
-              <div className="relative flex-1 max-w-sm">
+      {/* Transactions Section */}
+      <motion.div variants={itemVariants}>
+        <Card className="border-border/50 shadow-sm">
+          <CardHeader className="flex flex-row items-center justify-between">
+            <div>
+              <CardTitle>Transaction History</CardTitle>
+              <CardDescription>Detailed booking logs and custom entries.</CardDescription>
+            </div>
+            <div className="flex gap-2">
+              <div className="relative w-64 hidden md:block">
                 <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
                 <Input
-                  placeholder="Search by name, email, or ID"
+                  placeholder="Search transactions..."
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  className="pl-8"
+                  className="pl-8 h-9 bg-muted/30"
                 />
               </div>
-              <Button onClick={handleBookingReset} variant="outline" size="sm">
-                <RefreshCw className="mr-2 h-4 w-4" />
-                Reset
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button variant="outline" size="sm" className="h-9 gap-2">
+                    <CalendarIcon className="w-4 h-4" />
+                    <span className="hidden sm:inline">Date Range</span>
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="end">
+                  <Calendar
+                    mode="single"
+                    selected={bookingFromDate}
+                    onSelect={setBookingFromDate}
+                    initialFocus
+                  />
+                </PopoverContent>
+              </Popover>
+              <Button variant="ghost" size="icon" className="h-9 w-9" onClick={() => { setSearch(''); setBookingFromDate(undefined); setBookingToDate(undefined); }}>
+                <RefreshCw className="w-4 h-4" />
               </Button>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div>
-                <label className="text-sm font-medium">From Date</label>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button variant="outline" className="w-full justify-start text-left font-normal">
-                      <CalendarIcon className="mr-2 h-4 w-4" />
-                      {bookingFromDate ? format(bookingFromDate, 'PPP') : 'Pick a date'}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0">
-                    <Calendar mode="single" selected={bookingFromDate} onSelect={setBookingFromDate} initialFocus />
-                  </PopoverContent>
-                </Popover>
-              </div>
-              <div>
-                <label className="text-sm font-medium">To Date</label>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button variant="outline" className="w-full justify-start text-left font-normal">
-                      <CalendarIcon className="mr-2 h-4 w-4" />
-                      {bookingToDate ? format(bookingToDate, 'PPP') : 'Pick a date'}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0">
-                    <Calendar mode="single" selected={bookingToDate} onSelect={setBookingToDate} initialFocus />
-                  </PopoverContent>
-                </Popover>
-              </div>
-              {bookingDateError && (
-                <div className="flex items-end text-red-500 text-sm">{bookingDateError}</div>
-              )}
-            </div>
-          </div>
-        </CardHeader>
-        <CardContent>
-          <DataTable
-            columns={columns}
-            data={bookingsData?.bookings || []}
-            keyExtractor={(item) => item.id}
-            emptyMessage="No bookings found for the selected period"
-            isLoading={bookingsLoading}
-            pagination={
-              bookingsData?.pagination
-                ? {
-                    currentPage: bookingsData.pagination.currentPage,
-                    totalPages: bookingsData.pagination.totalPages,
-                    onPageChange: setPage,
-                  }
-                : undefined
-            }
-          />
-        </CardContent>
-      </Card>
-    </div>
+          </CardHeader>
+          <CardContent>
+            <DataTable
+              columns={columns}
+              data={bookingsData?.bookings || []}
+              keyExtractor={(item) => item.id}
+              emptyMessage="No transactions found."
+              isLoading={bookingsLoading}
+              pagination={bookingsData?.pagination ? {
+                currentPage: bookingsData.pagination.currentPage,
+                totalPages: bookingsData.pagination.totalPages,
+                onPageChange: setPage,
+              } : undefined}
+            />
+          </CardContent>
+        </Card>
+      </motion.div>
+
+    </motion.div>
   );
 };
 

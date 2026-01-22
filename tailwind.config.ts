@@ -56,10 +56,14 @@ export default {
           DEFAULT: "hsl(var(--gold))",
           light: "hsl(var(--gold-light))",
           dark: "hsl(var(--gold-dark))",
+          100: "hsl(40 60% 90%)",
+          200: "hsl(40 60% 80%)",
         },
         navy: {
           DEFAULT: "hsl(var(--navy))",
           light: "hsl(var(--navy-light))",
+          800: "hsl(220 50% 15%)",
+          900: "hsl(220 50% 10%)",
         },
         cream: {
           DEFAULT: "hsl(var(--cream))",
@@ -107,6 +111,10 @@ export default {
         shimmer: {
           "100%": { transform: "translateX(100%)" },
         },
+        float: {
+          "0%, 100%": { transform: "translateY(0)" },
+          "50%": { transform: "translateY(-5px)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -115,12 +123,17 @@ export default {
         "slide-in-right": "slide-in-right 0.3s ease-out",
         "scale-in": "scale-in 0.2s ease-out",
         shimmer: "shimmer 2s infinite",
+        float: "float 3s ease-in-out infinite",
       },
       boxShadow: {
         gold: "0 4px 14px 0 hsla(38, 70%, 50%, 0.25)",
         soft: "0 2px 15px -3px rgba(0, 0, 0, 0.07), 0 10px 20px -2px rgba(0, 0, 0, 0.04)",
         elegant: "0 10px 40px -10px rgba(0, 0, 0, 0.1)",
+        glass: "0 8px 32px 0 rgba(31, 38, 135, 0.07)",
       },
+      backdropBlur: {
+        xs: '2px',
+      }
     },
   },
   plugins: [tailwindcssAnimate],

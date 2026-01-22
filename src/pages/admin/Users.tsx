@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import UsersTable from '@/components/tables/UsersTable';
 import ViewUserModal from '@/components/common/ViewUserModal';
 import { User } from '@/types/index';
+import { motion } from 'framer-motion';
 
 const Users: React.FC = () => {
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
@@ -16,7 +17,7 @@ const Users: React.FC = () => {
   const fetchUsers = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('/api/admin/users', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/admin/users`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -26,8 +27,6 @@ const Users: React.FC = () => {
         setUsers(data);
       } else {
         console.error('Failed to fetch users, status:', response.status);
-        const errorText = await response.text();
-        console.error('Error response:', errorText);
       }
     } catch (error) {
       console.error('Error fetching users:', error);
@@ -45,7 +44,7 @@ const Users: React.FC = () => {
     try {
       const token = localStorage.getItem('token');
       const newStatus = currentStatus === 'active' ? 'inactive' : 'active';
-      const response = await fetch(`/api/admin/users/${userId}/status`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/admin/users/${userId}/status`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -64,10 +63,16 @@ const Users: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold text-foreground">User Management</h1>
-        <p className="text-muted-foreground">Manage registered users</p>
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="space-y-8"
+    >
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <div>
+          <h1 className="text-3xl font-serif font-bold text-foreground">User Management</h1>
+          <p className="text-muted-foreground mt-1">Monitor and manage registered user accounts.</p>
+        </div>
       </div>
 
       <UsersTable
@@ -85,7 +90,7 @@ const Users: React.FC = () => {
         }}
         user={selectedUser}
       />
-    </div>
+    </motion.div>
   );
 };
 

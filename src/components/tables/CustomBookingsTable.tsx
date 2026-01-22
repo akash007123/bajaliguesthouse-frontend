@@ -11,9 +11,12 @@ import {
   Users,
   Eye,
   Edit,
-  Trash2
+  Trash2,
+  Phone,
+  Calendar
 } from 'lucide-react';
-import {formatDate} from '../../utils/common';
+import { formatDate } from '../../utils/common';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 interface CustomBooking {
   id: string;
@@ -90,15 +93,14 @@ const CustomBookingsTable: React.FC<CustomBookingsTableProps> = ({ onView, onEdi
       header: 'Customer',
       render: (booking: CustomBooking) => (
         <div className="flex items-center gap-3">
-          {booking.profilePic ? (
-            <img src={`${import.meta.env.VITE_API_URL.replace('/api', '')}/uploads/${booking.profilePic}`} alt="Profile" className="w-8 h-8 rounded-full object-cover" />
-          ) : (
-            <div className="w-8 h-8 rounded-full bg-slate-500/10 flex items-center justify-center">
-              <User className="w-4 h-4 text-slate-500" />
-            </div>
-          )}
+          <Avatar className="h-9 w-9 border border-border/50">
+            {booking.profilePic ? (
+              <AvatarImage src={`${import.meta.env.VITE_API_URL.replace('/api', '')}/uploads/${booking.profilePic}`} />
+            ) : null}
+            <AvatarFallback className="bg-primary/5 text-primary text-xs">{booking.name.slice(0, 2).toUpperCase()}</AvatarFallback>
+          </Avatar>
           <div>
-            <p className="font-medium">{booking.name}</p>
+            <p className="font-medium text-sm text-foreground">{booking.name}</p>
             <p className="text-xs text-muted-foreground">{booking.email}</p>
           </div>
         </div>
@@ -108,9 +110,12 @@ const CustomBookingsTable: React.FC<CustomBookingsTableProps> = ({ onView, onEdi
       key: 'mobile',
       header: 'Contact',
       render: (booking: CustomBooking) => (
-        <div>
-          <p className="font-medium">{booking.mobile}</p>
-          <p className="text-xs text-muted-foreground">{booking.address.substring(0, 30)}...</p>
+        <div className="flex flex-col gap-0.5">
+          <div className="flex items-center gap-1.5 text-sm">
+            <Phone className="w-3 h-3 text-muted-foreground" />
+            <span className="font-medium">{booking.mobile}</span>
+          </div>
+          <p className="text-xs text-muted-foreground pl-4.5 truncate max-w-[150px]">{booking.address}</p>
         </div>
       )
     },
@@ -118,7 +123,7 @@ const CustomBookingsTable: React.FC<CustomBookingsTableProps> = ({ onView, onEdi
       key: 'roomAmount',
       header: 'Amount',
       render: (booking: CustomBooking) => (
-        <span className="font-bold">₹{booking.roomAmount.toLocaleString()}</span>
+        <span className="font-bold text-sm">₹{booking.roomAmount.toLocaleString()}</span>
       )
     },
     {
@@ -127,7 +132,7 @@ const CustomBookingsTable: React.FC<CustomBookingsTableProps> = ({ onView, onEdi
       render: (booking: CustomBooking) => (
         <div className="flex items-center gap-2">
           <Hash className="w-4 h-4 text-muted-foreground" />
-          <span className="font-medium">{booking.roomNo}</span>
+          <span className="font-medium text-sm">{booking.roomNo}</span>
         </div>
       )
     },
@@ -137,28 +142,30 @@ const CustomBookingsTable: React.FC<CustomBookingsTableProps> = ({ onView, onEdi
       render: (booking: CustomBooking) => (
         <div className="flex items-center gap-2">
           <Users className="w-4 h-4 text-muted-foreground" />
-          <span>{booking.numberOfGuests}</span>
+          <span className="text-sm">{booking.numberOfGuests}</span>
         </div>
       )
     },
     {
       key: 'createdAt',
-      header: 'Created',
+      header: 'Create Date',
       render: (booking: CustomBooking) => (
-        <span className="text-sm text-muted-foreground">
-          {formatDate(booking.createdAt)}
-        </span>
+        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+          <Calendar className="w-3 h-3" />
+          <span>{formatDate(booking.createdAt)}</span>
+        </div>
       )
     },
     {
       key: 'actions',
       header: 'Actions',
+      className: 'text-right',
       render: (booking: CustomBooking) => (
-        <div className="flex items-center gap-2">
+        <div className="flex items-center justify-end gap-1">
           <Button
             variant="ghost"
-            size="sm"
-            className="h-8 w-8 p-0"
+            size="icon"
+            className="h-8 w-8 hover:bg-muted"
             onClick={() => {
               setSelectedBooking(booking);
               setViewModalOpen(true);
@@ -169,16 +176,16 @@ const CustomBookingsTable: React.FC<CustomBookingsTableProps> = ({ onView, onEdi
           </Button>
           <Button
             variant="ghost"
-            size="sm"
-            className="h-8 w-8 p-0"
+            size="icon"
+            className="h-8 w-8 hover:bg-muted text-blue-500 hover:text-blue-600"
             onClick={() => onEdit?.(booking)}
           >
             <Edit className="w-4 h-4" />
           </Button>
           <Button
             variant="ghost"
-            size="sm"
-            className="h-8 w-8 p-0 text-rose-500 hover:text-rose-600"
+            size="icon"
+            className="h-8 w-8 hover:bg-rose-100 text-rose-500 hover:text-rose-600"
             onClick={() => handleDelete(booking)}
             disabled={deleteCustomBookingMutation.isPending}
           >
@@ -191,12 +198,16 @@ const CustomBookingsTable: React.FC<CustomBookingsTableProps> = ({ onView, onEdi
 
   return (
     <>
-      <Card className="border-border/50">
+      <Card className="border-border/50 shadow-sm bg-card/60 backdrop-blur-sm">
         <CardHeader>
-          <CardTitle>Custom Bookings</CardTitle>
-          <CardDescription>
-            {customBookingsData?.pagination?.totalBookings || 0} custom booking{(customBookingsData?.pagination?.totalBookings || 0) !== 1 ? 's' : ''} found
-          </CardDescription>
+          <div className="flex items-center justify-between">
+            <div className="space-y-1">
+              <CardTitle className="text-xl">Custom Booking Records</CardTitle>
+              <CardDescription>
+                {customBookingsData?.pagination?.totalBookings || 0} custom booking{(customBookingsData?.pagination?.totalBookings || 0) !== 1 ? 's' : ''} found
+              </CardDescription>
+            </div>
+          </div>
         </CardHeader>
         <CardContent>
           <DataTable

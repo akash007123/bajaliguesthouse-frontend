@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { Booking } from '@/types';
 import { StatusBadge } from '@/components/common/StatusBadge';
 import ViewBookingModal from '@/components/common/ViewBookingModal';
@@ -8,9 +8,9 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Skeleton } from '@/components/ui/skeleton';
+import { DataTable } from '@/components/tables/DataTable';
 import {
   Search,
   Filter,
@@ -23,7 +23,9 @@ import {
   Download,
   RefreshCw,
   AlertCircle,
-  MoreVertical
+  MoreVertical,
+  SlidersHorizontal,
+  ArrowUpDown
 } from 'lucide-react';
 import {
   DropdownMenu,
@@ -33,12 +35,14 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { format } from 'date-fns';
 
 const AdminBookings: React.FC = () => {
   const queryClient = useQueryClient();
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('All');
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
+  const [page, setPage] = useState(1);
 
   const { data: allBookings = [], isLoading } = useQuery<Booking[]>({
     queryKey: ['adminBookings'],
@@ -90,12 +94,7 @@ const AdminBookings: React.FC = () => {
 
   const containerVariants = {
     hidden: { opacity: 0 },
-    show: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1
-      }
-    }
+    show: { opacity: 1, transition: { staggerChildren: 0.1 } }
   };
 
   const itemVariants = {
@@ -103,97 +102,174 @@ const AdminBookings: React.FC = () => {
     show: { opacity: 1, y: 0 }
   };
 
-  const statusColors = {
-    Pending: 'bg-amber-500/10 text-amber-500 border-amber-500/20',
-    Approved: 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20',
-    Cancelled: 'bg-rose-500/10 text-rose-500 border-rose-500/20',
-    Completed: 'bg-blue-500/10 text-blue-500 border-blue-500/20',
-  };
+  // Define columns for DataTable
+  const columns = [
+    {
+      key: 'id',
+      header: 'Booking ID',
+      render: (item: Booking) => <span className="font-mono text-xs">{item.id.slice(0, 8)}...</span>
+    },
+    {
+      key: 'user',
+      header: 'Guest',
+      render: (item: Booking) => (
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 rounded-full bg-slate-500/10 flex items-center justify-center">
+            <User className="w-4 h-4 text-slate-500" />
+          </div>
+          <div>
+            <p className="font-medium text-sm">{item.userName}</p>
+            <p className="text-xs text-muted-foreground">{item.userEmail || 'No email'}</p>
+          </div>
+        </div>
+      )
+    },
+    {
+      key: 'room',
+      header: 'Room',
+      render: (item: Booking) => (
+        <div className="flex items-center gap-2">
+          <Building className="w-4 h-4 text-muted-foreground" />
+          <span className="font-medium text-sm">{item.roomName}</span>
+        </div>
+      )
+    },
+    {
+      key: 'dates',
+      header: 'Dates',
+      render: (item: Booking) => (
+        <div className="space-y-1">
+          <div className="flex items-center gap-2 text-xs">
+            <span className="font-medium text-emerald-600">In:</span>
+            <span>{format(new Date(item.checkIn), 'MMM dd')}</span>
+          </div>
+          <div className="flex items-center gap-2 text-xs text-muted-foreground">
+            <span className="font-medium">Out:</span>
+            <span>{format(new Date(item.checkOut), 'MMM dd')}</span>
+          </div>
+        </div>
+      )
+    },
+    {
+      key: 'amount',
+      header: 'Total',
+      render: (item: Booking) => <span className="font-bold text-sm">₹{item.totalPrice.toLocaleString()}</span>
+    },
+    {
+      key: 'status',
+      header: 'Status',
+      render: (item: Booking) => <StatusBadge status={item.status} />
+    },
+    {
+      key: 'actions',
+      header: 'Actions',
+      className: 'text-right',
+      render: (booking: Booking) => (
+        <div className="flex items-center justify-end gap-1">
+          <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-foreground" onClick={() => setSelectedBooking(booking)}>
+            <Eye className="w-4 h-4" />
+          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-foreground">
+                <MoreVertical className="w-4 h-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              {booking.status === 'Pending' && (
+                <>
+                  <DropdownMenuItem className="gap-2 text-emerald-600 focus:text-emerald-700" onClick={() => updateBookingStatus(booking.id, 'Approved')}>
+                    <CheckCircle className="w-4 h-4" />
+                    Approve
+                  </DropdownMenuItem>
+                  <DropdownMenuItem className="gap-2 text-rose-600 focus:text-rose-700" onClick={() => updateBookingStatus(booking.id, 'Cancelled')}>
+                    <XCircle className="w-4 h-4" />
+                    Reject
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                </>
+              )}
+              <DropdownMenuItem className="gap-2" onClick={() => updateBookingStatus(booking.id, 'Completed')}>
+                <CheckCircle className="w-4 h-4" />
+                Mark Complete
+              </DropdownMenuItem>
+              <DropdownMenuItem className="gap-2 text-rose-600 focus:text-rose-700" onClick={() => updateBookingStatus(booking.id, 'Cancelled')}>
+                <XCircle className="w-4 h-4" />
+                Cancel Booking
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      )
+    }
+  ];
 
   if (isLoading) {
     return (
-      <div className="space-y-8">
-        <div>
-          <Skeleton className="h-10 w-64 mb-2" />
-          <Skeleton className="h-4 w-96" />
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {[...Array(4)].map((_, i) => (
-            <Skeleton key={i} className="h-24 rounded-xl" />
-          ))}
-        </div>
-        <div className="flex gap-4 mb-6">
-          <Skeleton className="h-10 flex-1" />
-          <Skeleton className="h-10 w-48" />
-        </div>
-        <div className="space-y-4">
-          {[...Array(5)].map((_, i) => (
-            <Skeleton key={i} className="h-20 rounded-lg" />
-          ))}
-        </div>
+      <div className="p-6 space-y-6">
+        <DataTable isLoading columns={columns} data={[]} keyExtractor={(item) => item.id} />
       </div>
-    );
+    )
   }
 
   return (
-    <motion.div 
+    <motion.div
       initial="hidden"
       animate="show"
       variants={containerVariants}
       className="space-y-8"
     >
       {/* Header */}
-      <motion.div variants={itemVariants} className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <motion.div variants={itemVariants} className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl md:text-4xl font-serif font-bold mb-2 bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent">
-            Bookings Management
-          </h1>
-          <p className="text-muted-foreground text-lg">Manage and monitor all homestay bookings</p>
+          <h1 className="text-3xl font-serif font-bold text-foreground">Bookings Management</h1>
+          <p className="text-muted-foreground mt-1">Monitor and manage all reservations.</p>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline" className="gap-2">
+          <Button variant="outline" size="sm" className="gap-2">
             <Download className="w-4 h-4" />
-            Export
+            Export CSV
           </Button>
-          <Button 
-            variant="outline" 
-            className="gap-2"
+          <Button
+            variant="ghost"
+            size="icon"
             onClick={() => queryClient.invalidateQueries({ queryKey: ['adminBookings'] })}
+            className="hover:bg-muted"
           >
             <RefreshCw className="w-4 h-4" />
-            Refresh
           </Button>
         </div>
       </motion.div>
 
       {/* Stats Overview */}
-      <motion.div variants={containerVariants} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <motion.div variants={containerVariants} className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
         {Object.entries(statusCounts).map(([status, count]) => (
           <motion.div
             key={status}
             variants={itemVariants}
-            whileHover={{ y: -2, transition: { duration: 0.2 } }}
+            whileHover={{ y: -2 }}
+            onClick={() => setStatusFilter(status)}
+            className={`cursor-pointer transition-all duration-200 ${statusFilter === status ? 'ring-2 ring-gold ring-offset-2 ring-offset-background' : ''}`}
           >
-            <Card className="border-border/50 hover:shadow-lg transition-all duration-300">
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm text-muted-foreground">{status}</p>
-                    <p className="text-2xl font-bold text-foreground mt-1">{count}</p>
-                  </div>
-                  <div className={`w-12 h-12 rounded-full flex items-center justify-center ${
-                    status === 'Pending' ? 'bg-amber-500/10' :
-                    status === 'Approved' ? 'bg-emerald-500/10' :
-                    status === 'Cancelled' ? 'bg-rose-500/10' :
-                    status === 'Completed' ? 'bg-blue-500/10' :
-                    'bg-slate-500/10'
+            <Card className="border-border/50 hover:shadow-md h-full bg-card/60 backdrop-blur-sm">
+              <CardContent className="p-4 flex flex-col items-center justify-center text-center space-y-2">
+                <div className={`w-8 h-8 rounded-full flex items-center justify-center ${status === 'Pending' ? 'bg-amber-100 text-amber-600' :
+                    status === 'Approved' ? 'bg-emerald-100 text-emerald-600' :
+                      status === 'Cancelled' ? 'bg-rose-100 text-rose-600' :
+                        status === 'Completed' ? 'bg-blue-100 text-blue-600' :
+                          'bg-slate-100 text-slate-600'
                   }`}>
-                    {status === 'Pending' && <AlertCircle className="w-6 h-6 text-amber-500" />}
-                    {status === 'Approved' && <CheckCircle className="w-6 h-6 text-emerald-500" />}
-                    {status === 'Cancelled' && <XCircle className="w-6 h-6 text-rose-500" />}
-                    {status === 'Completed' && <Calendar className="w-6 h-6 text-blue-500" />}
-                    {status === 'All' && <RefreshCw className="w-6 h-6 text-slate-500" />}
-                  </div>
+                  {status === 'Pending' && <AlertCircle className="w-4 h-4" />}
+                  {status === 'Approved' && <CheckCircle className="w-4 h-4" />}
+                  {status === 'Cancelled' && <XCircle className="w-4 h-4" />}
+                  {status === 'Completed' && <Calendar className="w-4 h-4" />}
+                  {status === 'All' && <SlidersHorizontal className="w-4 h-4" />}
+                </div>
+                <div>
+                  <span className="text-2xl font-bold block">{count}</span>
+                  <span className="text-xs text-muted-foreground font-medium uppercase tracking-wide">{status}</span>
                 </div>
               </CardContent>
             </Card>
@@ -201,236 +277,48 @@ const AdminBookings: React.FC = () => {
         ))}
       </motion.div>
 
-      {/* Filters */}
-      <motion.div variants={itemVariants}>
-        <Card className="border-border/50">
-          <CardContent className="p-6">
-            <div className="flex flex-col lg:flex-row gap-4">
-              <div className="flex-1 relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-                <Input
-                  placeholder="Search bookings by guest, room, or ID..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10"
-                />
-              </div>
-              <div className="flex gap-4">
-                <Select value={statusFilter} onValueChange={setStatusFilter}>
-                  <SelectTrigger className="w-48">
-                    <Filter className="w-4 h-4 mr-2" />
-                    <SelectValue placeholder="Filter by status" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {Object.keys(statusCounts).map((status) => (
-                      <SelectItem key={status} value={status}>
-                        <div className="flex items-center justify-between w-full">
-                          <span>{status}</span>
-                          <Badge variant="secondary" className="ml-2">
-                            {statusCounts[status as keyof typeof statusCounts]}
-                          </Badge>
-                        </div>
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                {(searchTerm || statusFilter !== 'All') && (
-                  <Button
-                    variant="ghost"
-                    onClick={() => {
-                      setSearchTerm('');
-                      setStatusFilter('All');
-                    }}
-                    className="text-muted-foreground"
-                  >
-                    Clear Filters
-                  </Button>
-                )}
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </motion.div>
+      {/* Filters & Table */}
+      <motion.div variants={itemVariants} className="space-y-4">
+        <div className="flex flex-col sm:flex-row gap-4 items-center justify-between bg-card/40 p-1 rounded-xl">
+          <div className="relative w-full sm:w-72">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            <Input
+              placeholder="Search guests, rooms..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-9 h-10 bg-background/50 border-input/60 focus:bg-background"
+            />
+          </div>
 
-      {/* Bookings Table */}
-      <motion.div variants={itemVariants}>
-        <Card className="border-border/50 overflow-hidden">
-          <CardHeader className="bg-gradient-to-r from-card to-card/50 border-b border-border/50">
-            <div className="flex items-center justify-between">
-              <div>
-                <CardTitle>All Bookings</CardTitle>
-                <CardDescription>
-                  {filteredBookings.length} booking{filteredBookings.length !== 1 ? 's' : ''} found
-                </CardDescription>
-              </div>
-              <Badge variant="secondary" className="px-3 py-1">
-                Total Revenue: ₹{filteredBookings.reduce((sum, b) => sum + b.totalPrice, 0).toLocaleString()}
+          <div className="flex items-center gap-2 w-full sm:w-auto">
+            {statusFilter !== 'All' && (
+              <Badge variant="secondary" className="px-3 h-8 flex gap-2 items-center cursor-pointer hover:bg-muted" onClick={() => setStatusFilter('All')}>
+                {statusFilter}
+                <XCircle className="w-3 h-3" />
               </Badge>
-            </div>
-          </CardHeader>
-          <CardContent className="p-0">
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b border-border/50 bg-muted/30">
-                    {/* <th className="text-left py-4 px-6 text-sm font-semibold text-muted-foreground">Booking ID</th> */}
-                    <th className="text-left py-4 px-6 text-sm font-semibold text-muted-foreground">Guest</th>
-                    <th className="text-left py-4 px-6 text-sm font-semibold text-muted-foreground">Room</th>
-                    <th className="text-left py-4 px-6 text-sm font-semibold text-muted-foreground">Duration</th>
-                    <th className="text-left py-4 px-6 text-sm font-semibold text-muted-foreground">Amount</th>
-                    <th className="text-left py-4 px-6 text-sm font-semibold text-muted-foreground">Status</th>
-                    <th className="text-left py-4 px-6 text-sm font-semibold text-muted-foreground">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <AnimatePresence>
-                    {filteredBookings.map((booking, index) => (
-                      <motion.tr
-                        key={booking.id}
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ delay: index * 0.05 }}
-                        className="border-b border-border/50 hover:bg-muted/30 transition-colors group"
-                      >
-
-                        <td className="py-4 px-6">
-                          <div className="flex items-center gap-3">
-                            <div className="w-8 h-8 rounded-full bg-slate-500/10 flex items-center justify-center">
-                              <User className="w-4 h-4 text-slate-500" />
-                            </div>
-                            <div>
-                              <p className="font-medium">{booking.userName}</p>
-                              <p className="text-xs text-muted-foreground">{booking.userEmail || 'No email'}</p>
-                            </div>
-                          </div>
-                        </td>
-                        <td className="py-4 px-6">
-                          <div className="flex items-center gap-2">
-                            <Building className="w-4 h-4 text-muted-foreground" />
-                            <span className="font-medium">{booking.roomName}</span>
-                          </div>
-                        </td>
-                        <td className="py-4 px-6">
-                          <div className="space-y-1">
-                            <div className="flex items-center gap-2 text-sm">
-                              <Calendar className="w-4 h-4 text-muted-foreground" />
-                              <span>{new Date(booking.checkIn).toLocaleDateString()}</span>
-                            </div>
-                            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                              <Calendar className="w-4 h-4" />
-                              <span>{new Date(booking.checkOut).toLocaleDateString()}</span>
-                            </div>
-                          </div>
-                        </td>
-                        <td className="py-4 px-6">
-                          <div className="flex items-center gap-2">
-                            <span className="font-bold">₹{booking.totalPrice.toLocaleString()}</span>
-                          </div>
-                        </td>
-                        <td className="py-4 px-6">
-                          <StatusBadge status={booking.status} />
-                        </td>
-                        <td className="py-4 px-6">
-                           <div className="flex items-center gap-2">
-                             {(booking.status === 'Pending' || booking.status === 'New') && (
-                               <>
-                                 <Button
-                                   size="sm"
-                                   className="gap-1 bg-emerald-500 hover:bg-emerald-600"
-                                   onClick={() => updateBookingStatus(booking.id, 'Approved')}
-                                   disabled={updateStatusMutation.isPending}
-                                 >
-                                   <CheckCircle className="w-3 h-3" />
-                                   Approve
-                                 </Button>
-                                 <Button
-                                   size="sm"
-                                   variant="destructive"
-                                   className="gap-1"
-                                   onClick={() => updateBookingStatus(booking.id, 'Cancelled')}
-                                   disabled={updateStatusMutation.isPending}
-                                 >
-                                   <XCircle className="w-3 h-3" />
-                                   Cancel
-                                 </Button>
-                               </>
-                             )}
-                             <Button variant="ghost" size="sm" className="h-8 w-8 p-0" onClick={() => setSelectedBooking(booking)}>
-                               <Eye className="w-4 h-4" />
-                             </Button>
-                             <DropdownMenu>
-                               <DropdownMenuTrigger asChild>
-                                 <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                                   <MoreVertical className="w-4 h-4" />
-                                 </Button>
-                               </DropdownMenuTrigger>
-                               <DropdownMenuContent align="end">
-                                 <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                                 <DropdownMenuSeparator />
-                                 <DropdownMenuItem className="gap-2 text-emerald-600" onClick={() => updateBookingStatus(booking.id, 'Completed')}>
-                                   <CheckCircle className="w-4 h-4" />
-                                   Mark as Complete
-                                 </DropdownMenuItem>
-                                 <DropdownMenuItem className="gap-2 text-blue-600">
-                                   <Calendar className="w-4 h-4" />
-                                   Reschedule
-                                 </DropdownMenuItem>
-                                 <DropdownMenuSeparator />
-                                 <DropdownMenuItem className="gap-2 text-rose-600">
-                                   <XCircle className="w-4 h-4" />
-                                   Cancel Booking
-                                 </DropdownMenuItem>
-                               </DropdownMenuContent>
-                             </DropdownMenu>
-                           </div>
-                         </td>
-                      </motion.tr>
-                    ))}
-                  </AnimatePresence>
-                </tbody>
-              </table>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Empty State */}
-        {filteredBookings.length === 0 && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="text-center py-12"
-          >
-            <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-muted/50 flex items-center justify-center">
-              <Calendar className="w-12 h-12 text-muted-foreground/50" />
-            </div>
-            <h3 className="text-xl font-semibold text-foreground mb-2">No bookings found</h3>
-            <p className="text-muted-foreground mb-6 max-w-md mx-auto">
-              {searchTerm || statusFilter !== 'All' 
-                ? 'Try adjusting your search or filter criteria'
-                : 'No bookings have been made yet. Bookings will appear here once customers make reservations.'}
-            </p>
-            {(searchTerm || statusFilter !== 'All') && (
-              <Button
-                variant="outline"
-                onClick={() => {
-                  setSearchTerm('');
-                  setStatusFilter('All');
-                }}
-              >
-                Clear Filters
-              </Button>
             )}
-          </motion.div>
-        )}
+          </div>
+        </div>
 
-        {/* View Booking Modal */}
-        <ViewBookingModal
-          booking={selectedBooking}
-          isOpen={!!selectedBooking}
-          onClose={() => setSelectedBooking(null)}
+        <DataTable
+          columns={columns}
+          data={filteredBookings}
+          keyExtractor={(item) => item.id}
+          emptyMessage="No bookings found matching your criteria."
+          isLoading={isLoading}
+          pagination={{
+            currentPage: page,
+            totalPages: Math.ceil(filteredBookings.length / 10),
+            onPageChange: setPage
+          }}
         />
       </motion.div>
+
+      <ViewBookingModal
+        booking={selectedBooking}
+        isOpen={!!selectedBooking}
+        onClose={() => setSelectedBooking(null)}
+      />
     </motion.div>
   );
 };

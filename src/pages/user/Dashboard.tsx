@@ -21,26 +21,26 @@ const UserDashboard: React.FC = () => {
   });
 
   const stats = [
-    { 
-      label: 'Total Bookings', 
-      value: bookings.length, 
-      icon: Calendar, 
+    {
+      label: 'Total Bookings',
+      value: bookings.length,
+      icon: Calendar,
       color: 'text-blue-500',
       bgColor: 'bg-blue-500/10',
       description: 'All your bookings'
     },
-    { 
-      label: 'Upcoming Stays', 
-      value: bookings.filter(b => b.status === 'Approved').length, 
-      icon: BedDouble, 
+    {
+      label: 'Upcoming Stays',
+      value: bookings.filter(b => b.status === 'Approved').length,
+      icon: BedDouble,
       color: 'text-emerald-500',
       bgColor: 'bg-emerald-500/10',
       description: 'Confirmed stays'
     },
-    { 
-      label: 'Total Spent', 
-      value: `₹${bookings.reduce((sum, b) => sum + b.totalPrice, 0).toLocaleString()}`, 
-      icon: IndianRupee, 
+    {
+      label: 'Total Spent',
+      value: `₹${bookings.reduce((sum, b) => sum + b.totalPrice, 0).toLocaleString()}`,
+      icon: IndianRupee,
       color: 'text-amber-500',
       bgColor: 'bg-amber-500/10',
       description: 'Total amount spent'
@@ -92,7 +92,7 @@ const UserDashboard: React.FC = () => {
   }
 
   return (
-    <motion.div 
+    <motion.div
       initial="hidden"
       animate="show"
       variants={containerVariants}

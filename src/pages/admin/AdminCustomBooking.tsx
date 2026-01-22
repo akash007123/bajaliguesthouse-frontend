@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import CustomBookingForm from '@/components/forms/CustomBookingForm';
 import CustomBookingsTable from '@/components/tables/CustomBookingsTable';
-import { Plus } from 'lucide-react';
+import { Plus, Download } from 'lucide-react';
 
 interface CustomBooking {
   id: string;
@@ -28,12 +28,7 @@ const AdminCustomBooking: React.FC = () => {
 
   const containerVariants = {
     hidden: { opacity: 0 },
-    show: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1
-      }
-    }
+    show: { opacity: 1, transition: { staggerChildren: 0.1 } }
   };
 
   const itemVariants = {
@@ -60,7 +55,8 @@ const AdminCustomBooking: React.FC = () => {
   };
 
   const handleViewBooking = (booking: CustomBooking) => {
-    // TODO: Implement view booking modal
+    // View booking logic handled by the table internal modal for now
+    // or we can implement page level modal if needed
     console.log('View booking:', booking);
   };
 
@@ -77,41 +73,45 @@ const AdminCustomBooking: React.FC = () => {
       className="space-y-8"
     >
       {/* Header */}
-      <motion.div variants={itemVariants} className="flex items-center justify-between">
+      <motion.div variants={itemVariants} className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl md:text-4xl font-serif font-bold mb-2 bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent">
-            Custom Bookings
-          </h1>
-          <p className="text-muted-foreground text-lg">Manage offline and custom booking entries</p>
+          <h1 className="text-3xl font-serif font-bold text-foreground">Custom Bookings</h1>
+          <p className="text-muted-foreground mt-1">Manage offline and manual booking entries.</p>
         </div>
-        <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-          <DialogTrigger asChild>
-            <Button className="gap-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700">
-              <Plus className="w-4 h-4" />
-              Add Custom Booking
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
-            <DialogHeader>
-              <DialogTitle>Add Custom Booking</DialogTitle>
-              <DialogDescription>
-                Enter customer information and booking details for offline bookings
-              </DialogDescription>
-            </DialogHeader>
-            <CustomBookingForm
-              onSuccess={handleFormSuccess}
-              onCancel={handleFormCancel}
-            />
-          </DialogContent>
-        </Dialog>
+        <div className="flex gap-3">
+          <Button variant="outline" className="gap-2">
+            <Download className="w-4 h-4" />
+            Export
+          </Button>
+          <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+            <DialogTrigger asChild>
+              <Button className="gap-2 bg-gold hover:bg-gold-dark text-white shadow-gold hover:shadow-lg transition-all duration-300">
+                <Plus className="w-4 h-4" />
+                Add New Booking
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+              <DialogHeader>
+                <DialogTitle>Add Custom Booking</DialogTitle>
+                <DialogDescription>
+                  Enter customer information and booking details for offline bookings
+                </DialogDescription>
+              </DialogHeader>
+              <CustomBookingForm
+                onSuccess={handleFormSuccess}
+                onCancel={handleFormCancel}
+              />
+            </DialogContent>
+          </Dialog>
+        </div>
 
-        {/* Edit Modal */}
+        {/* Edit Modal (Hidden initially) */}
         <Dialog open={editModalOpen} onOpenChange={setEditModalOpen}>
           <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
-              <DialogTitle>Edit Custom Booking</DialogTitle>
+              <DialogTitle>Edit Booking Details</DialogTitle>
               <DialogDescription>
-                Update customer information and booking details
+                Update information for {selectedBooking?.name}'s booking
               </DialogDescription>
             </DialogHeader>
             <CustomBookingForm
