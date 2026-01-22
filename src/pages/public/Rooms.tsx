@@ -32,22 +32,59 @@ const Rooms: React.FC = () => {
   return (
     <div>
       {/* Header */}
-      <section className="bg-primary py-20 md:py-28">
-        <div className="container-hotel text-center">
+      <section className="relative h-[60vh] min-h-[500px] flex items-center justify-center overflow-hidden">
+        {/* Background */}
+        <div className="absolute inset-0">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+            initial={{ scale: 1.1 }}
+            animate={{ scale: 1 }}
+            transition={{ duration: 10, ease: "easeOut" }}
+            className="w-full h-full"
           >
-            <span className="text-gold font-medium mb-2 block">ACCOMMODATIONS</span>
-            <h1 className="heading-display text-primary-foreground mb-4">
-              Our Rooms & Suites
+            <div className="absolute inset-0 bg-gradient-to-b from-navy/60 via-navy/40 to-navy/80 z-10" />
+            <img
+              src="https://images.unsplash.com/photo-1618773928121-c32242e63f39?q=80&w=2070&auto=format&fit=crop"
+              alt="Luxury Room Interior"
+              className="w-full h-full object-cover"
+            />
+          </motion.div>
+        </div>
+
+        <div className="container-hotel relative z-20 text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+          >
+            <motion.span
+              className="inline-block text-gold uppercase tracking-[0.3em] text-sm font-semibold mb-6 px-4 py-1 border border-gold/30 rounded-full"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.2 }}
+            >
+              Accommodations
+            </motion.span>
+
+            <h1 className="text-5xl md:text-7xl font-serif text-white mb-8 leading-tight">
+              Our Rooms <span className="text-gold italic">&</span> Suites
             </h1>
-            <p className="text-primary-foreground/80 text-lg max-w-2xl mx-auto">
+
+            <p className="text-white/90 text-lg md:text-xl max-w-2xl mx-auto font-light leading-relaxed">
               Discover our comfortable homestay rooms in the heart of Ujjain,
               each designed to provide authentic Indian hospitality with modern amenities.
             </p>
           </motion.div>
         </div>
+
+        {/* Scroll Indicator */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1 }}
+          className="absolute bottom-10 left-1/2 -translate-x-1/2 z-20"
+        >
+          <div className="w-px h-12 bg-gradient-to-b from-white to-transparent opacity-50" />
+        </motion.div>
       </section>
 
       {/* Filters & Rooms */}
@@ -86,11 +123,10 @@ const Rooms: React.FC = () => {
                 <button
                   key={type}
                   onClick={() => setSelectedType(type)}
-                  className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
-                    selectedType === type
+                  className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${selectedType === type
                       ? 'bg-gold text-white'
                       : 'bg-muted text-foreground hover:bg-muted/80'
-                  }`}
+                    }`}
                 >
                   {type}
                 </button>
