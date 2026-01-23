@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { FormInput } from '@/components/forms/FormInput';
 import { useQuery } from '@tanstack/react-query';
 
-const roomTypes = ['All', 'Standard', 'Deluxe', 'Executive', 'Presidential'];
+const roomTypes = ['All', 'Standard', 'Deluxe', 'Executive', 'Presidential', 'Family', 'Honeymoon'];
 
 const Rooms: React.FC = () => {
   const [selectedType, setSelectedType] = useState('All');
@@ -17,17 +17,24 @@ const Rooms: React.FC = () => {
 
   const { data: allRooms = [], isLoading } = useQuery({
     queryKey: ['rooms'],
-    queryFn: () => fetch(`${import.meta.env.VITE_API_URL}/rooms`).then(res => res.json())
+    queryFn: () => fetch(`${import.meta.env.VITE_API_URL}/rooms`).then(res => res.json()),
+    refetchOnMount: true
   });
+
+  console.log(`Fetched ${allRooms.length} rooms`);
+  console.log('allRooms:', allRooms);
 
   const filteredRooms = allRooms.filter((room: Room) => {
     const matchesType = selectedType === 'All' || room.type === selectedType;
-    const matchesSearch = room.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      room.description.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesSearch = (room.name && room.name.toLowerCase().includes(searchQuery.toLowerCase())) ||
+      (room.description && room.description.toLowerCase().includes(searchQuery.toLowerCase()));
     const effectivePrice = room.discountPrice || room.price;
     const matchesPrice = effectivePrice >= priceRange[0] && effectivePrice <= priceRange[1];
+    console.log(`Room ${room.name}: matchesType=${matchesType}, matchesSearch=${matchesSearch}, matchesPrice=${matchesPrice}, effectivePrice=${effectivePrice}`);
     return matchesType && matchesSearch && matchesPrice;
   });
+
+  console.log('filteredRooms:', filteredRooms);
 
   return (
     <div>

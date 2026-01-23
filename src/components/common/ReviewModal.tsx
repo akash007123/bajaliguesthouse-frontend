@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Star, X } from 'lucide-react';
 import { toast } from 'sonner';
 import { Booking } from '@/types';
+import { formatDate } from '../../utils/common';
 
 interface ReviewModalProps {
   booking: Booking | null;
@@ -72,7 +73,7 @@ const ReviewModal: React.FC<ReviewModalProps> = ({ booking, isOpen, onClose, onS
                 <div className="bg-muted/50 p-4 rounded-lg">
                   <h4 className="font-medium mb-2">{booking.roomName}</h4>
                   <p className="text-sm text-muted-foreground">
-                    {new Date(booking.checkIn).toLocaleDateString()} - {new Date(booking.checkOut).toLocaleDateString()}
+                    {formatDate(booking.checkIn)} - {formatDate(booking.checkOut)}
                   </p>
                 </div>
               )}

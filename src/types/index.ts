@@ -1,7 +1,7 @@
 export interface Room {
   id: string;
   name: string;
-  type: 'Deluxe' | 'Executive' | 'Presidential' | 'Standard';
+  type: 'Deluxe' | 'Executive' | 'Presidential' | 'Standard' | 'Family' | 'Honeymoon';
   price: number;
   discountPrice?: number;
   description: string;

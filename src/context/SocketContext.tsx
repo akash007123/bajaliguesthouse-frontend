@@ -39,22 +39,38 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   useEffect(() => {
     // Request browser notification permission
     if ('Notification' in window && Notification.permission === 'default') {
-      Notification.requestPermission();
+      Notification.requestPermission().then((permission) => {
+        console.log('Notification permission:', permission);
+      }).catch((error) => {
+        console.error('Error requesting notification permission:', error);
+      });
     }
   }, []);
 
   useEffect(() => {
     if (user) {
-      const newSocket = io('http://localhost:5000'); // Adjust URL as needed
+      console.log('Connecting to socket for user:', user);
+      const apiUrl = import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5000';
+      const newSocket = io(apiUrl);
       setSocket(newSocket);
 
+      newSocket.on('connect', () => {
+        console.log('Socket connected');
+      });
+
+      newSocket.on('disconnect', () => {
+        console.log('Socket disconnected');
+      });
+
       newSocket.on('newBooking', (notification: Notification) => {
+        console.log('Received newBooking event:', notification);
         if (user.role === 'admin') {
           addNotification(notification);
         }
       });
 
       newSocket.on('bookingApproved', (notification: Notification) => {
+        console.log('Received bookingApproved event:', notification);
         if (user.role === 'user' && notification.userId === user.id) {
           addNotification(notification);
         }
@@ -67,25 +83,38 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   }, [user]);
 
   const addNotification = (notification: Notification) => {
+    console.log('Adding notification:', notification);
     setNotifications(prev => [notification, ...prev]);
 
     // Show browser notification if permission granted
+    console.log('Notification API available:', 'Notification' in window);
+    console.log('Notification permission:', Notification.permission);
+
     if ('Notification' in window && Notification.permission === 'granted') {
+      console.log('Creating browser notification');
       const title = notification.type === 'newBooking' ? 'New Booking Received' : 'Booking Approved';
       const body = notification.type === 'newBooking'
         ? `New booking from ${notification.userName} for ${notification.roomName}`
         : `Your booking for ${notification.roomName} has been approved`;
 
-      const browserNotification = new Notification(title, {
-        body,
-        icon: '/logo.png', // Adjust icon path as needed
-        tag: notification.id, // Prevent duplicate notifications
-      });
+      try {
+        const browserNotification = new Notification(title, {
+          body,
+          icon: '/logo.png', // Adjust icon path as needed
+          tag: notification.id, // Prevent duplicate notifications
+        });
 
-      // Auto-close after 5 seconds
-      setTimeout(() => {
-        browserNotification.close();
-      }, 5000);
+        console.log('Browser notification created:', browserNotification);
+
+        // Auto-close after 5 seconds
+        setTimeout(() => {
+          browserNotification.close();
+        }, 5000);
+      } catch (error) {
+        console.error('Error creating browser notification:', error);
+      }
+    } else {
+      console.log('Browser notification not created - permission not granted or API not available');
     }
   };
 

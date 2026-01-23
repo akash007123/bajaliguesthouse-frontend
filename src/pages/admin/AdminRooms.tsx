@@ -62,7 +62,8 @@ const AdminRooms: React.FC = () => {
     queryKey: ['adminRooms'],
     queryFn: () => fetch(`${import.meta.env.VITE_API_URL}/admin/rooms`, {
       headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-    }).then(res => res.json())
+    }).then(res => res.json()),
+    refetchOnMount: true
   });
 
   const deleteMutation = useMutation({
@@ -72,6 +73,7 @@ const AdminRooms: React.FC = () => {
     }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['adminRooms'] });
+      queryClient.invalidateQueries({ queryKey: ['rooms'] });
       toast.success('Room deleted successfully');
     },
     onError: () => {
@@ -91,6 +93,7 @@ const AdminRooms: React.FC = () => {
       }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['adminRooms'] });
+      queryClient.invalidateQueries({ queryKey: ['rooms'] });
       toast.success('Room availability updated');
     },
     onError: () => {
@@ -125,7 +128,7 @@ const AdminRooms: React.FC = () => {
     toggleAvailabilityMutation.mutate({ id: room.id, available: !room.available });
   };
 
-  const roomTypes = Array.from(new Set(rooms.map(room => room.type)));
+  const roomTypes = Array.from(new Set(rooms.map(room => room.type).filter(type => type && type.trim())));
   const stats = {
     total: rooms.length,
     available: rooms.filter(r => r.available).length,
@@ -407,7 +410,7 @@ const AdminRooms: React.FC = () => {
                           <div className="flex items-start justify-between mb-4">
                             <div>
                               <h3 className="text-xl font-semibold text-foreground mb-1">{room.name}</h3>
-                              <p className="text-sm text-muted-foreground">{room.type}</p>
+                              <p className="text-sm text-muted-foreground">{room.type || 'Standard'}</p>
                             </div>
                             <div className="text-right">
                               <p className="text-2xl font-bold text-amber-500">₹{room.price}</p>
@@ -545,7 +548,7 @@ const AdminRooms: React.FC = () => {
                             </td>
                             <td className="py-4 px-6">
                               <Badge variant="outline" className="capitalize">
-                                {room.type}
+                                {room.type || 'Standard'}
                               </Badge>
                             </td>
                             <td className="py-4 px-6">

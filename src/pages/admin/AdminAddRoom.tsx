@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { ImageUpload } from '@/components/forms/ImageUpload';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -63,6 +63,7 @@ const BED_TYPES = [
 
 const AdminAddRoom: React.FC = () => {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const [activeTab, setActiveTab] = useState('basic');
   const [formData, setFormData] = useState({
     name: '',
@@ -94,6 +95,8 @@ const AdminAddRoom: React.FC = () => {
       }),
     onSuccess: () => {
       toast.success('Room added successfully!');
+      queryClient.invalidateQueries({ queryKey: ['adminRooms'] });
+      queryClient.invalidateQueries({ queryKey: ['rooms'] });
       navigate('/admin/dashboard/rooms');
     },
     onError: () => {
