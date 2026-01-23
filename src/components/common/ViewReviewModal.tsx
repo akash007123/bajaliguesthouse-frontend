@@ -5,7 +5,7 @@ import { Separator } from '@/components/ui/separator';
 import { Booking } from '@/types';
 import { StatusBadge } from '@/components/common/StatusBadge';
 import { Calendar, User, Building, Star, MessageSquare, CheckCircle, XCircle } from 'lucide-react';
-import { formatDate } from '../../utils/common';
+import { formatDate } from '@/lib/utils';
 
 interface ViewReviewModalProps {
   booking: Booking | null;

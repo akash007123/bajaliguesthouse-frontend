@@ -26,13 +26,17 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 import ViewBookingModal from "@/components/common/ViewBookingModal";
+import ViewReviewModal from "@/components/common/ViewReviewModal";
 import DashboardCharts from "@/components/dashboard/DashboardCharts";
 import DashboardRecentBookings from "@/components/dashboard/DashboardRecentBookings";
+import DashboardRecentReviews from "@/components/dashboard/DashboardRecentReviews";
 
 const AdminDashboard: React.FC = () => {
   const { user } = useAuth();
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedReviewBooking, setSelectedReviewBooking] = useState<Booking | null>(null);
+  const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
 
   const { data: bookings = [], isLoading: bookingsLoading } = useQuery<Booking[]>({
     queryKey: ["adminBookings"],
@@ -297,10 +301,18 @@ const AdminDashboard: React.FC = () => {
         </motion.div>
       </div>
 
+      <DashboardRecentReviews bookings={bookings} setSelectedBooking={setSelectedReviewBooking} setIsModalOpen={setIsReviewModalOpen} />
+
       <ViewBookingModal
         booking={selectedBooking}
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
+      />
+
+      <ViewReviewModal
+        booking={selectedReviewBooking}
+        isOpen={isReviewModalOpen}
+        onClose={() => setIsReviewModalOpen(false)}
       />
     </motion.div>
   );
