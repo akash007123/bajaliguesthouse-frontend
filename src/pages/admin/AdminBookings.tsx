@@ -78,7 +78,7 @@ const AdminBookings: React.FC = () => {
       booking.id.toString().includes(searchTerm);
     const matchesStatus = statusFilter === 'All' || booking.status === statusFilter;
     return matchesSearch && matchesStatus;
-  });
+  }).sort((a, b) => new Date(b.checkIn).getTime() - new Date(a.checkIn).getTime());
 
   const updateBookingStatus = (id: string, newStatus: string) => {
     updateStatusMutation.mutate({ id, status: newStatus });

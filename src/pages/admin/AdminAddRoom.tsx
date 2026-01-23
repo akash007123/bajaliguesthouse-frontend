@@ -77,6 +77,8 @@ const AdminAddRoom: React.FC = () => {
     size: 400,
     isAC: true,
     available: true,
+    availableFrom: '',
+    availableTo: '',
     amenities: [] as string[]
   });
 
@@ -309,6 +311,17 @@ const AdminAddRoom: React.FC = () => {
                       <Switch checked={formData.available} onCheckedChange={(c) => handleChange('available', c)} />
                     </div>
                   </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <Label>Available From</Label>
+                      <Input type="date" value={formData.availableFrom} onChange={(e) => handleChange('availableFrom', e.target.value)} className="bg-background/50" />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Available To</Label>
+                      <Input type="date" value={formData.availableTo} onChange={(e) => handleChange('availableTo', e.target.value)} className="bg-background/50" />
+                    </div>
+                  </div>
                 </motion.div>
               )}
 
@@ -374,6 +387,9 @@ const AdminAddRoom: React.FC = () => {
                         <div><h4 className="text-sm font-medium text-muted-foreground">Name & Type</h4><p className="text-lg font-semibold">{formData.name} <span className="text-muted-foreground text-sm font-normal">({formData.type})</span></p></div>
                         <div><h4 className="text-sm font-medium text-muted-foreground">Price</h4><p className="text-lg font-bold text-gold">₹{formData.price} <span className="text-sm text-foreground font-normal">/ night</span></p></div>
                         <div><h4 className="text-sm font-medium text-muted-foreground">Capacity</h4><p>{formData.capacity} Guests • {formData.bedType}</p></div>
+                        {(formData.availableFrom || formData.availableTo) && (
+                          <div><h4 className="text-sm font-medium text-muted-foreground">Availability</h4><p>{formData.availableFrom ? new Date(formData.availableFrom).toLocaleDateString() : 'N/A'} - {formData.availableTo ? new Date(formData.availableTo).toLocaleDateString() : 'N/A'}</p></div>
+                        )}
                       </div>
                       <div className="space-y-4">
                         <div><h4 className="text-sm font-medium text-muted-foreground">Amenities</h4><div className="flex flex-wrap gap-1 mt-1">{formData.amenities.map(a => <Badge key={a} variant="secondary">{a}</Badge>)}</div></div>

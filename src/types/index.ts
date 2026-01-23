@@ -13,6 +13,8 @@ export interface Room {
   bedType: string;
   size: number; // in sq ft
   available: boolean;
+  availableFrom?: string;
+  availableTo?: string;
 }
 
 export interface Booking {
