@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import {
   Phone,
@@ -14,6 +14,38 @@ import { hotelInfo } from "@/data/mockData";
 import { motion } from "framer-motion";
 
 export const Footer: React.FC = () => {
+  const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState("");
+
+  const handleSubscribe = async () => {
+    if (!email) {
+      setMessage("Please enter your email address");
+      return;
+    }
+    setLoading(true);
+    setMessage("");
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/newsletters/subscribe`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email }),
+      });
+      const data = await response.json();
+      if (response.ok) {
+        setMessage("Successfully subscribed to newsletter!");
+        setEmail("");
+      } else {
+        setMessage(data.message || "Failed to subscribe");
+      }
+    } catch (error) {
+      setMessage("An error occurred. Please try again.");
+    }
+    setLoading(false);
+  };
+
   return (
     <footer className="bg-navy text-white relative overflow-hidden pt-20 pb-10">
       {/* Decorative Background Elements */}
@@ -33,15 +65,28 @@ export const Footer: React.FC = () => {
             </p>
           </div>
           <div className="relative">
-            <div className="flex items-center bg-white/5 backdrop-blur-sm border border-white/10 rounded-full p-2 pl-6 focus-within:border-gold/50 transition-colors duration-300">
-              <input
-                type="email"
-                placeholder="Your email address"
-                className="bg-transparent border-none text-white placeholder:text-white/40 focus:ring-0 w-full outline-none"
-              />
-              <button className="bg-gold hover:bg-gold/90 text-navy rounded-full p-3 flex-shrink-0 transition-all transform hover:scale-105">
-                <Send className="w-5 h-5" />
-              </button>
+            <div className="flex flex-col space-y-2">
+              <div className="flex items-center bg-white/5 backdrop-blur-sm border border-white/10 rounded-full p-2 pl-6 focus-within:border-gold/50 transition-colors duration-300">
+                <input
+                  type="email"
+                  placeholder="Your email address"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="bg-transparent border-none text-white placeholder:text-white/40 focus:ring-0 w-full outline-none"
+                />
+                <button
+                  onClick={handleSubscribe}
+                  disabled={loading}
+                  className="bg-gold hover:bg-gold/90 text-navy rounded-full p-3 flex-shrink-0 transition-all transform hover:scale-105 disabled:opacity-50"
+                >
+                  <Send className="w-5 h-5" />
+                </button>
+              </div>
+              {message && (
+                <p className={`text-sm ${message.includes("Successfully") ? "text-green-400" : "text-red-400"}`}>
+                  {message}
+                </p>
+              )}
             </div>
           </div>
         </div>

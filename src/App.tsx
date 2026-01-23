@@ -42,6 +42,7 @@ import AdminReviews from "./pages/admin/AdminReviews";
 import AdminDarshans from "./pages/admin/AdminDarshans";
 import AdminAddDarshan from "./pages/admin/AdminAddDarshan";
 import AdminEditDarshan from "./pages/admin/AdminEditDarshan";
+import AdminNewsletters from "./pages/admin/AdminNewsletters";
 
 import NotFound from "./pages/NotFound";
 
@@ -95,6 +96,7 @@ const App = () => (
               <Route path="darshans" element={<AdminDarshans />} />
               <Route path="darshans/add" element={<AdminAddDarshan />} />
               <Route path="darshans/edit/:id" element={<AdminEditDarshan />} />
+              <Route path="newsletters" element={<AdminNewsletters />} />
               <Route path="profile" element={<UserProfile />} />
             </Route>
 

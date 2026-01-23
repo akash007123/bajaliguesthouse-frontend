@@ -179,6 +179,12 @@ const AdminDashboard: React.FC = () => {
               Add New Room
             </Button>
           </Link>
+          <Link to="/admin/dashboard/newsletters">
+            <Button variant="outline" className="h-11 px-5 rounded-xl border-border/60 hover:bg-muted/50 hover:text-foreground hover:border-border transition-all duration-300">
+              <Users className="w-4 h-4 mr-2" />
+              Newsletter Subscribers
+            </Button>
+          </Link>
         </div>
       </motion.div>
 
