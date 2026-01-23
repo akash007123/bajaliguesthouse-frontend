@@ -4,7 +4,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-import { Star, X } from 'lucide-react';
+import { Star } from 'lucide-react';
 import { toast } from 'sonner';
 import { Booking } from '@/types';
 import { formatDate } from '../../utils/common';

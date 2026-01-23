@@ -1,6 +1,5 @@
 import React from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Booking } from '@/types';
 import { StatusBadge } from '@/components/common/StatusBadge';

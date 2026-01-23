@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { Upload, X, FileText, Image as ImageIcon } from 'lucide-react';
+import { Upload, X, FileText } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface FileUploadProps {

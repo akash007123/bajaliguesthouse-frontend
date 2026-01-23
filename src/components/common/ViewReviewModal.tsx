@@ -3,7 +3,6 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Booking } from '@/types';
-import { StatusBadge } from '@/components/common/StatusBadge';
 import { Calendar, User, Building, Star, MessageSquare, CheckCircle, XCircle } from 'lucide-react';
 import { formatDate } from '@/lib/utils';
 

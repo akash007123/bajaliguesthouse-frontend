@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { MapPin, Users, Maximize, Snowflake, Tag } from 'lucide-react';
+import { Users, Maximize, Snowflake, Tag } from 'lucide-react';
 import { Room } from '@/types';
 import { Button } from '@/components/ui/button';
 
