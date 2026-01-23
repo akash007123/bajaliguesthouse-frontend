@@ -12,7 +12,7 @@ const roomTypes = ['All', 'Standard', 'Deluxe', 'Executive', 'Presidential', 'Fa
 const Rooms: React.FC = () => {
   const [selectedType, setSelectedType] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
-  const [priceRange, setPriceRange] = useState<[number, number]>([0, 1500]);
+  const [priceRange, setPriceRange] = useState<[number, number]>([0, Number.MAX_SAFE_INTEGER]);
   const [showFilters, setShowFilters] = useState(false);
 
   const { data: allRooms = [], isLoading } = useQuery({
@@ -25,12 +25,24 @@ const Rooms: React.FC = () => {
   console.log('allRooms:', allRooms);
 
   const filteredRooms = allRooms.filter((room: Room) => {
-    const matchesType = selectedType === 'All' || room.type === selectedType;
-    const matchesSearch = (room.name && room.name.toLowerCase().includes(searchQuery.toLowerCase())) ||
-      (room.description && room.description.toLowerCase().includes(searchQuery.toLowerCase()));
-    const effectivePrice = room.discountPrice || room.price;
-    const matchesPrice = effectivePrice >= priceRange[0] && effectivePrice <= priceRange[1];
-    console.log(`Room ${room.name}: matchesType=${matchesType}, matchesSearch=${matchesSearch}, matchesPrice=${matchesPrice}, effectivePrice=${effectivePrice}`);
+    // Normalize type comparison (case-insensitive, allow partial includes)
+    const roomType = (room.type ?? '').toString().trim().toLowerCase();
+    const selType = selectedType.trim().toLowerCase();
+    const matchesType = selType === 'all' || roomType === selType || roomType.includes(selType);
+
+    // Search only when query provided; case-insensitive on name/description
+    const q = searchQuery.trim().toLowerCase();
+    const name = (room.name ?? '').toString().toLowerCase();
+    const desc = (room.description ?? '').toString().toLowerCase();
+    const matchesSearch = !q || name.includes(q) || desc.includes(q);
+
+    // Price: parse safely; include room if price missing/invalid
+    const rawPrice = (room as any).discountPrice ?? (room as any).price;
+    const effectivePrice = Number(rawPrice);
+    const hasValidPrice = Number.isFinite(effectivePrice);
+    const matchesPrice = !hasValidPrice || (effectivePrice >= priceRange[0] && effectivePrice <= priceRange[1]);
+
+    console.log(`Room ${room.name}: matchesType=${matchesType}, matchesSearch=${matchesSearch}, matchesPrice=${matchesPrice}, effectivePrice=${hasValidPrice ? effectivePrice : 'N/A'}`);
     return matchesType && matchesSearch && matchesPrice;
   });
 
