@@ -91,3 +91,14 @@ export interface HotelInfo {
   checkOutTime: string;
   amenities: string[];
 }
+
+export interface Contact {
+  _id: string;
+  name: string;
+  email: string;
+  phone?: string;
+  subject: string;
+  message: string;
+  status: 'unread' | 'read' | 'replied';
+  createdAt: string;
+}

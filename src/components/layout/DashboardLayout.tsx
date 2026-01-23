@@ -14,7 +14,7 @@ import {
   ChevronRight,
   BedDouble,
   Users,
-  MessageSquare,
+  Package,
   MapPin,
   PlusCircle,
   Star,
@@ -53,6 +53,7 @@ const userNavItems: NavItem[] = [
 
 const adminNavItems: NavItem[] = [
   { name: "Dashboard", path: "/admin/dashboard", icon: LayoutDashboard },
+  { name: "Contacts", path: "/admin/dashboard/contacts", icon: Package },
   { name: "Bookings", path: "/admin/dashboard/bookings", icon: Calendar },
   { name: "Rooms", path: "/admin/dashboard/rooms", icon: BedDouble },
   { name: "Add Room", path: "/admin/dashboard/rooms/add", icon: PlusCircle },

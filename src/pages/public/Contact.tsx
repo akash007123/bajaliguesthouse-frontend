@@ -57,11 +57,26 @@ const Contact: React.FC = () => {
 
   const onSubmit = async (data: ContactFormData) => {
     setIsSubmitting(true);
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    toast.success('Message sent successfully! We\'ll get back to you soon.');
-    reset();
-    setIsSubmitting(false);
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/contacts`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (response.ok) {
+        toast.success('Message sent successfully! We\'ll get back to you soon.');
+        reset();
+      } else {
+        throw new Error('Failed to send message');
+      }
+    } catch (error) {
+      toast.error('Failed to send message. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
