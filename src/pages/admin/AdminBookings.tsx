@@ -203,7 +203,7 @@ const AdminBookings: React.FC = () => {
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              {booking.status === 'Pending' && (
+              {(booking.status === 'Pending' || booking.status === 'New') && (
                 <>
                   <DropdownMenuItem className="gap-2 text-emerald-600 focus:text-emerald-700" onClick={() => updateBookingStatus(booking.id, 'Approved')}>
                     <CheckCircle className="w-4 h-4" />

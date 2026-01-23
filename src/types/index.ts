@@ -37,6 +37,8 @@ export interface Booking {
   rating?: number;
   feedback?: string;
   reviewApproved?: boolean;
+  approvedBy?: string;
+  approvedAt?: string;
 }
 
 export interface StaffMember {

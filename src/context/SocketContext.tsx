@@ -37,6 +37,13 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const { user } = useAuth();
 
   useEffect(() => {
+    // Request browser notification permission
+    if ('Notification' in window && Notification.permission === 'default') {
+      Notification.requestPermission();
+    }
+  }, []);
+
+  useEffect(() => {
     if (user) {
       const newSocket = io('http://localhost:5000'); // Adjust URL as needed
       setSocket(newSocket);
@@ -61,6 +68,25 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
   const addNotification = (notification: Notification) => {
     setNotifications(prev => [notification, ...prev]);
+
+    // Show browser notification if permission granted
+    if ('Notification' in window && Notification.permission === 'granted') {
+      const title = notification.type === 'newBooking' ? 'New Booking Received' : 'Booking Approved';
+      const body = notification.type === 'newBooking'
+        ? `New booking from ${notification.userName} for ${notification.roomName}`
+        : `Your booking for ${notification.roomName} has been approved`;
+
+      const browserNotification = new Notification(title, {
+        body,
+        icon: '/logo.png', // Adjust icon path as needed
+        tag: notification.id, // Prevent duplicate notifications
+      });
+
+      // Auto-close after 5 seconds
+      setTimeout(() => {
+        browserNotification.close();
+      }, 5000);
+    }
   };
 
   const clearNotifications = () => {

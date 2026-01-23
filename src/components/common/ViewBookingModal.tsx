@@ -109,6 +109,15 @@ const ViewBookingModal: React.FC<ViewBookingModalProps> = ({ booking, isOpen, on
                   {formatDate(booking.createdAt)}
                 </p>
               </div>
+              {booking.status === 'Approved' && booking.approvedBy && booking.approvedAt && (
+                <div>
+                  <label className="text-sm font-medium text-muted-foreground">Approved By</label>
+                  <p className="text-sm flex items-center gap-1">
+                    <User className="w-4 h-4" />
+                    {booking.approvedBy} on {formatDate(booking.approvedAt)}
+                  </p>
+                </div>
+              )}
             </div>
           </div>
 
