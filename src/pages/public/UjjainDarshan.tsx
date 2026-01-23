@@ -27,35 +27,70 @@ const UjjainDarshan: React.FC = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50">
       {/* Hero Section */}
-      <section className="relative h-screen flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0 bg-black/40 z-10" />
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1 }}
-          className="relative z-20 text-center text-white px-4"
-        >
-          <h1 className="text-6xl md:text-8xl font-bold mb-6 bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent">
-            Ujjain Darshan
-          </h1>
-          <p className="text-xl md:text-2xl mb-8 max-w-3xl mx-auto">
-            Discover the spiritual heart of India - Ujjain, where ancient temples, sacred rivers, and timeless traditions come together in perfect harmony.
-          </p>
+      {/* Hero Section */}
+      <section className="relative h-[70vh] min-h-[600px] flex items-center justify-center overflow-hidden">
+        {/* Background */}
+        <div className="absolute inset-0">
           <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.5, duration: 0.5 }}
-            className="flex flex-col sm:flex-row gap-4 justify-center"
+            initial={{ scale: 1.1 }}
+            animate={{ scale: 1 }}
+            transition={{ duration: 10, ease: "easeOut" }}
+            className="w-full h-full"
           >
-            <button className="bg-gradient-to-r from-yellow-500 to-orange-600 hover:from-yellow-600 hover:to-orange-700 text-white font-semibold py-3 px-8 rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg">
-              Explore Attractions
-            </button>
-            <button className="border-2 border-white text-white hover:bg-white hover:text-gray-900 font-semibold py-3 px-8 rounded-full transition-all duration-300">
-              Plan Your Visit
-            </button>
+            <div className="absolute inset-0 bg-gradient-to-b from-navy/60 via-navy/40 to-navy/80 z-10" />
+            <img
+              src="https://hotelimperialujjain.com/wp-content/uploads/2022/12/Mahalok-1.jpg"
+              alt="Ujjain Mahakal Lok"
+              className="w-full h-full object-cover"
+            />
           </motion.div>
+        </div>
+
+        <div className="container-hotel relative z-20 text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+          >
+            <motion.span
+              className="inline-block text-gold uppercase tracking-[0.3em] text-sm font-semibold mb-6 px-4 py-1 border border-gold/30 rounded-full"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.2 }}
+            >
+              The City of Temples
+            </motion.span>
+
+            <h1 className="text-5xl md:text-7xl font-serif text-white mb-8 leading-tight">
+              Divine <span className="text-gold italic">Darshan</span>
+            </h1>
+
+            <p className="text-white/90 text-lg md:text-xl max-w-2xl mx-auto font-light leading-relaxed mb-10">
+              Journey through the sacred corridors of time. Experience the spiritual grandeur of Mahakaleshwar and the holy Shipra river.
+            </p>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 }}
+              className="flex flex-col sm:flex-row gap-4 justify-center"
+            >
+              <button className="bg-gold hover:bg-gold/90 text-navy font-semibold py-3 px-8 rounded-full transition-all duration-300 transform hover:scale-105 shadow-[0_4px_14px_0_rgba(212,175,55,0.39)]">
+                Explore Attractions
+              </button>
+            </motion.div>
+          </motion.div>
+        </div>
+
+        {/* Scroll Indicator */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1 }}
+          className="absolute bottom-10 left-1/2 -translate-x-1/2 z-20"
+        >
+          <div className="w-px h-12 bg-gradient-to-b from-white to-transparent opacity-50" />
         </motion.div>
-        <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: 'url(https://hotelimperialujjain.com/wp-content/uploads/2022/12/Mahalok-1.jpg)' }} />
       </section>
 
       {/* Introduction Section */}
@@ -148,43 +183,43 @@ const UjjainDarshan: React.FC = () => {
               </div>
             ) : (
               attractions.map((attraction, index) => (
-              <motion.div
-                key={attraction.name}
-                initial={{ opacity: 0, y: 50 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: index * 0.1 }}
-              >
-                <Card className="overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
-                  <div className="relative h-64 overflow-hidden">
-                    <img
-                      src={attraction.image}
-                      alt={attraction.name}
-                      className="w-full h-full object-cover transition-transform duration-300 hover:scale-110"
-                    />
-                    <div className="absolute top-4 right-4">
-                      <Badge variant="secondary" className="bg-white/90 text-gray-800">
-                        <Star className="w-4 h-4 mr-1 fill-yellow-400 text-yellow-400" />
-                        {attraction.rating}
-                      </Badge>
-                    </div>
-                  </div>
-                  <CardContent className="p-6">
-                    <h3 className="text-2xl font-semibold mb-3 text-gray-800">{attraction.name}</h3>
-                    <p className="text-gray-600 mb-4 leading-relaxed">{attraction.description}</p>
-                    <div className="flex items-center justify-between text-sm text-gray-500">
-                      <div className="flex items-center">
-                        <MapPin className="w-4 h-4 mr-1" />
-                        {attraction.location}
-                      </div>
-                      <div className="flex items-center">
-                        <Clock className="w-4 h-4 mr-1" />
-                        {attraction.time}
+                <motion.div
+                  key={attraction.name}
+                  initial={{ opacity: 0, y: 50 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: index * 0.1 }}
+                >
+                  <Card className="overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
+                    <div className="relative h-64 overflow-hidden">
+                      <img
+                        src={attraction.image}
+                        alt={attraction.name}
+                        className="w-full h-full object-cover transition-transform duration-300 hover:scale-110"
+                      />
+                      <div className="absolute top-4 right-4">
+                        <Badge variant="secondary" className="bg-white/90 text-gray-800">
+                          <Star className="w-4 h-4 mr-1 fill-yellow-400 text-yellow-400" />
+                          {attraction.rating}
+                        </Badge>
                       </div>
                     </div>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            )))}
+                    <CardContent className="p-6">
+                      <h3 className="text-2xl font-semibold mb-3 text-gray-800">{attraction.name}</h3>
+                      <p className="text-gray-600 mb-4 leading-relaxed">{attraction.description}</p>
+                      <div className="flex items-center justify-between text-sm text-gray-500">
+                        <div className="flex items-center">
+                          <MapPin className="w-4 h-4 mr-1" />
+                          {attraction.location}
+                        </div>
+                        <div className="flex items-center">
+                          <Clock className="w-4 h-4 mr-1" />
+                          {attraction.time}
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              )))}
           </div>
         </div>
       </section>
