@@ -21,8 +21,14 @@ import {
   User,
   Calendar,
   MoreVertical,
-  ArrowUpDown
+  ArrowUpDown,
+  Download,
+  FileText,
+  FileSpreadsheet
 } from 'lucide-react';
+import * as XLSX from 'xlsx';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -112,6 +118,41 @@ const AdminContacts: React.FC = () => {
     if (window.confirm('Are you sure you want to delete this contact?')) {
       deleteMutation.mutate(id);
     }
+  };
+
+  const exportToExcel = () => {
+    const data = filteredContacts.map(contact => ({
+      Name: contact.name,
+      Email: contact.email,
+      Subject: contact.subject,
+      Message: contact.message,
+      Status: contact.status,
+      Date: format(new Date(contact.createdAt), 'MMM dd, yyyy')
+    }));
+    const ws = XLSX.utils.json_to_sheet(data);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Contacts');
+    XLSX.writeFile(wb, 'contacts.xlsx');
+    toast.success('Contacts exported to Excel successfully!');
+  };
+
+  const exportToPDF = () => {
+    const doc = new jsPDF();
+    doc.text('Contacts Report', 20, 10);
+    const tableData = filteredContacts.map(contact => [
+      contact.name,
+      contact.email,
+      contact.subject,
+      contact.status,
+      format(new Date(contact.createdAt), 'MMM dd, yyyy')
+    ]);
+    autoTable(doc, {
+      head: [['Name', 'Email', 'Subject', 'Status', 'Date']],
+      body: tableData,
+      startY: 20
+    });
+    doc.save('contacts.pdf');
+    toast.success('Contacts exported to PDF successfully!');
   };
 
   const statusCounts = {
@@ -218,14 +259,34 @@ const AdminContacts: React.FC = () => {
           <h1 className="text-3xl font-serif font-bold text-navy-900">Contacts</h1>
           <p className="text-muted-foreground">Manage customer inquiries and messages</p>
         </div>
-        <Button
-          onClick={() => queryClient.invalidateQueries({ queryKey: ['adminContacts'] })}
-          variant="outline"
-          className="gap-2"
-        >
-          <RefreshCw className="w-4 h-4" />
-          Refresh
-        </Button>
+        <div className="flex gap-2">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" className="gap-2">
+                <Download className="w-4 h-4" />
+                Export
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={exportToExcel}>
+                <FileSpreadsheet className="mr-2 h-4 w-4" />
+                Export to Excel
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={exportToPDF}>
+                <FileText className="mr-2 h-4 w-4" />
+                Export to PDF
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <Button
+            onClick={() => queryClient.invalidateQueries({ queryKey: ['adminContacts'] })}
+            variant="outline"
+            className="gap-2"
+          >
+            <RefreshCw className="w-4 h-4" />
+            Refresh
+          </Button>
+        </div>
       </div>
 
       {/* Stats Cards */}

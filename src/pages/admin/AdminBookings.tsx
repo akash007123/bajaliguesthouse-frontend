@@ -84,6 +84,31 @@ const AdminBookings: React.FC = () => {
     updateStatusMutation.mutate({ id, status: newStatus });
   };
 
+  const handleExportCSV = () => {
+    const headers = ['Booking ID', 'Guest Name', 'Guest Email', 'Room', 'Check-in Date', 'Check-out Date', 'Total', 'Status'];
+    const rows = filteredBookings.map(booking => [
+      booking.id,
+      booking.userName,
+      booking.userEmail || 'No email',
+      booking.roomName,
+      format(new Date(booking.checkIn), 'yyyy-MM-dd'),
+      format(new Date(booking.checkOut), 'yyyy-MM-dd'),
+      booking.totalPrice.toString(),
+      booking.status
+    ]);
+
+    const csvContent = [headers, ...rows].map(row => row.map(field => `"${field}"`).join(',')).join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', 'bookings.csv');
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   const statusCounts = {
     All: allBookings.length,
     Pending: allBookings.filter(b => b.status === 'Pending').length,
@@ -228,9 +253,9 @@ const AdminBookings: React.FC = () => {
           <p className="text-muted-foreground mt-1">Monitor and manage all reservations.</p>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline" size="sm" className="gap-2">
-            <Download className="w-4 h-4" />
+          <Button variant="outline" size="sm" className="gap-2" onClick={handleExportCSV}>
             Export CSV
+            <Download className="w-4 h-4" />
           </Button>
           <Button
             variant="ghost"
