@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, Variants } from 'framer-motion';
 import { Users, Maximize, Snowflake, Tag } from 'lucide-react';
 import { Room } from '@/types';
 import { Button } from '@/components/ui/button';
@@ -8,9 +8,10 @@ import { Button } from '@/components/ui/button';
 interface RoomCardProps {
   room: Room;
   index?: number;
+  variants?: Variants;
 }
 
-export const RoomCard: React.FC<RoomCardProps> = ({ room, index = 0 }) => {
+export const RoomCard: React.FC<RoomCardProps> = ({ room, index = 0, variants }) => {
   const hasDiscount = room.discountPrice && room.discountPrice < room.price;
   const discountPercentage = hasDiscount
     ? Math.round(((room.price - room.discountPrice!) / room.price) * 100)
@@ -20,8 +21,16 @@ export const RoomCard: React.FC<RoomCardProps> = ({ room, index = 0 }) => {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.1 }}
-      className="card-hotel overflow-hidden group"
+      transition={{ delay: index * 0.1, type: "spring", stiffness: 100 }}
+      whileHover={{
+        rotateY: 5,
+        rotateX: 5,
+        scale: 1.05,
+        boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)"
+      }}
+      style={{ transformStyle: 'preserve-3d' }}
+      variants={variants}
+      className="card-hotel overflow-hidden group cursor-pointer"
     >
       {/* Image */}
       <div className="relative aspect-[4/3] overflow-hidden">
