@@ -94,7 +94,7 @@ const Contact: React.FC = () => {
           >
             <div className="absolute inset-0 bg-gradient-to-b from-navy/70 via-navy/50 to-navy/80 z-10" />
             <img
-              src="https://images.unsplash.com/photo-1596178830539-d35c24e68e29?q=80&w=2070&auto=format&fit=crop"
+              src="https://plus.unsplash.com/premium_photo-1682125235036-d1ab54136ff4?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8Y29udGFjdCUyMGJhbm5lcnxlbnwwfHwwfHx8MA%3D%3D"
               alt="Contact Support"
               className="w-full h-full object-cover"
             />

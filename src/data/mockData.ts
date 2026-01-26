@@ -195,9 +195,9 @@ export const hotelInfo = {
   subname: 'Home Stay',
   tagline: 'Your Home Away from Home in Ujjain',
   description: 'Welcome to Shri Balaji Home Stay, nestled in the heart of Ujjain, Madhya Pradesh. Experience authentic Indian hospitality in our comfortable homestay, where traditional warmth meets modern amenities. Discover the spiritual essence of Ujjain while enjoying personalized care and local experiences.',
-  address: 'Ujjain, Madhya Pradesh, India',
-  phone: '+91 XXXXX XXXXX',
-  email: 'info@shribalajihomestay.com',
+  address: 'D9/20, MIG, Kshipra Vihar, Ujjain, Madhya Pradesh, 456010.',
+  phone: '+91 9202963722, +91 7489222202',
+  email: 'sshri.balajihomestay@gmail.com',
   checkInTime: '12:00 PM',
   checkOutTime: '11:00 AM',
   amenities: [

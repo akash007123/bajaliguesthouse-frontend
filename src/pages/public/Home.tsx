@@ -6,6 +6,7 @@ import {
   Dumbbell, Users, Award, Clock, MapPin, Quote, Calendar,
   ChevronDown, CheckCircle, Map, Phone, Mail, Instagram, Facebook
 } from 'lucide-react';
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import { Button } from '@/components/ui/button';
 import { RoomCard } from '@/components/common/RoomCard';
 import { Room, HotelInfo } from '@/types';
@@ -469,42 +470,47 @@ const Home: React.FC = () => {
             <h2 className="text-4xl md:text-5xl font-serif text-navy">Guest Stories</h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {reviews.slice(0, 3).map((review, i) => (
-              <motion.div
-                key={review.id}
-                variants={fadeInUp3D}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, margin: "-50px" }}
-                whileHover={{ y: -10, rotateX: 5, z: 20 }}
-                transition={{ duration: 0.6, delay: i * 0.2 }}
-                style={{ transformStyle: "preserve-3d" }}
-                className="bg-muted/20 p-8 rounded-2xl border border-border/50 relative group hover:shadow-2xl transition-all"
-              >
-                <Quote className="text-gold/20 w-10 h-10 mb-4" />
-                <p className="text-muted-foreground italic mb-6 leading-relaxed">"{review.feedback}"</p>
+          <Carousel className="w-full max-w-6xl mx-auto">
+            <CarouselContent>
+              {reviews.map((review, i) => (
+                <CarouselItem key={review.id} className="basis-full md:basis-1/2 lg:basis-1/3">
+                  <motion.div
+                    variants={fadeInUp3D}
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true, margin: "-50px" }}
+                    whileHover={{ y: -10, rotateX: 5, z: 20 }}
+                    transition={{ duration: 0.6, delay: i * 0.1 }}
+                    style={{ transformStyle: "preserve-3d" }}
+                    className="bg-muted/20 p-8 rounded-2xl border border-border/50 relative group hover:shadow-2xl transition-all h-full"
+                  >
+                    <Quote className="text-gold/20 w-10 h-10 mb-4" />
+                    <p className="text-muted-foreground italic mb-6 leading-relaxed">"{review.feedback}"</p>
 
-                <div className="flex items-center gap-4">
-                  {review.userId?.profilePicture ? (
-                    <img src={review.userId.profilePicture} alt={review.userName} className="w-12 h-12 rounded-full object-cover" />
-                  ) : (
-                    <div className="w-12 h-12 rounded-full bg-gold/20 flex items-center justify-center text-gold font-bold">
-                      {review.userName.charAt(0)}
+                    <div className="flex items-center gap-4">
+                      {review.userId?.profilePicture ? (
+                        <img src={review.userId.profilePicture} alt={review.userName} className="w-12 h-12 rounded-full object-cover" />
+                      ) : (
+                        <div className="w-12 h-12 rounded-full bg-gold/20 flex items-center justify-center text-gold font-bold">
+                          {review.userName.charAt(0)}
+                        </div>
+                      )}
+                      <div>
+                        <h4 className="font-semibold text-foreground">{review.userName}</h4>
+                        <div className="flex gap-0.5">
+                          {[...Array(review.rating)].map((_, r) => (
+                            <Star key={r} size={12} className="text-gold fill-gold" />
+                          ))}
+                        </div>
+                      </div>
                     </div>
-                  )}
-                  <div>
-                    <h4 className="font-semibold text-foreground">{review.userName}</h4>
-                    <div className="flex gap-0.5">
-                      {[...Array(review.rating)].map((_, r) => (
-                        <Star key={r} size={12} className="text-gold fill-gold" />
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
+                  </motion.div>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselPrevious className="hidden md:flex" />
+            <CarouselNext className="hidden md:flex" />
+          </Carousel>
         </div>
       </section>
 
