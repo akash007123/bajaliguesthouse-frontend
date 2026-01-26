@@ -66,7 +66,14 @@ const Home: React.FC = () => {
 
   const { data: reviews = [] } = useQuery<PopulatedReview[]>({
     queryKey: ['reviews'],
-    queryFn: () => fetch(`${import.meta.env.VITE_API_URL}/reviews`).then(res => res.json())
+    // Fetch only approved reviews from backend (server already filters approved)
+    queryFn: async () => {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/reviews`);
+      if (!res.ok) throw new Error('Failed to load reviews');
+      const data = await res.json();
+      // Ensure we only show items with required fields and valid rating (defensive)
+      return (data || []).filter((r: PopulatedReview) => r && r.feedback && r.userName && r.rating >= 1);
+    }
   });
 
   const featuredRooms = rooms.slice(0, 3);
@@ -260,7 +267,7 @@ const Home: React.FC = () => {
               >
                 <div className="w-32 h-32 bg-background/80 backdrop-blur-md rounded-full flex items-center justify-center border border-white/20 shadow-xl">
                   <div className="text-center">
-                    <span className="block text-3xl font-serif text-gold">15+</span>
+                    <span className="block text-3xl font-serif text-gold">3+</span>
                     <span className="text-[10px] uppercase tracking-wider text-foreground">Years</span>
                   </div>
                 </div>
@@ -472,41 +479,45 @@ const Home: React.FC = () => {
 
           <Carousel className="w-full max-w-6xl mx-auto">
             <CarouselContent>
-              {reviews.map((review, i) => (
-                <CarouselItem key={review.id} className="basis-full md:basis-1/2 lg:basis-1/3">
-                  <motion.div
-                    variants={fadeInUp3D}
-                    initial="hidden"
-                    whileInView="visible"
-                    viewport={{ once: true, margin: "-50px" }}
-                    whileHover={{ y: -10, rotateX: 5, z: 20 }}
-                    transition={{ duration: 0.6, delay: i * 0.1 }}
-                    style={{ transformStyle: "preserve-3d" }}
-                    className="bg-muted/20 p-8 rounded-2xl border border-border/50 relative group hover:shadow-2xl transition-all h-full"
-                  >
-                    <Quote className="text-gold/20 w-10 h-10 mb-4" />
-                    <p className="text-muted-foreground italic mb-6 leading-relaxed">"{review.feedback}"</p>
+              {reviews.length === 0 ? (
+                <div className="w-full text-center py-8 text-muted-foreground">No reviews yet. Be the first to share your experience.</div>
+              ) : (
+                reviews.map((review, i) => (
+                  <CarouselItem key={review.id || i} className="basis-full md:basis-1/2 lg:basis-1/3">
+                    <motion.div
+                      variants={fadeInUp3D}
+                      initial="hidden"
+                      whileInView="visible"
+                      viewport={{ once: true, margin: "-50px" }}
+                      whileHover={{ y: -10, rotateX: 5, z: 20 }}
+                      transition={{ duration: 0.6, delay: i * 0.1 }}
+                      style={{ transformStyle: "preserve-3d" }}
+                      className="bg-muted/20 p-8 rounded-2xl border border-border/50 relative group hover:shadow-2xl transition-all h-full"
+                    >
+                      <Quote className="text-gold/20 w-10 h-10 mb-4" />
+                      <p className="text-muted-foreground italic mb-6 leading-relaxed">"{review.feedback}"</p>
 
-                    <div className="flex items-center gap-4">
-                      {review.userId?.profilePicture ? (
-                        <img src={review.userId.profilePicture} alt={review.userName} className="w-12 h-12 rounded-full object-cover" />
-                      ) : (
-                        <div className="w-12 h-12 rounded-full bg-gold/20 flex items-center justify-center text-gold font-bold">
-                          {review.userName.charAt(0)}
-                        </div>
-                      )}
-                      <div>
-                        <h4 className="font-semibold text-foreground">{review.userName}</h4>
-                        <div className="flex gap-0.5">
-                          {[...Array(review.rating)].map((_, r) => (
-                            <Star key={r} size={12} className="text-gold fill-gold" />
-                          ))}
+                      <div className="flex items-center gap-4">
+                        {review.userId?.profilePicture ? (
+                          <img src={review.userId.profilePicture} alt={review.userName} className="w-12 h-12 rounded-full object-cover" />
+                        ) : (
+                          <div className="w-12 h-12 rounded-full bg-gold/20 flex items-center justify-center text-gold font-bold">
+                            {review.userName?.charAt(0)}
+                          </div>
+                        )}
+                        <div>
+                          <h4 className="font-semibold text-foreground">{review.userId?.name || review.userName}</h4>
+                          <div className="flex gap-0.5">
+                            {Array.from({ length: Math.max(0, Math.min(5, review.rating || 0)) }).map((_, r) => (
+                              <Star key={r} size={12} className="text-gold fill-gold" />
+                            ))}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </motion.div>
-                </CarouselItem>
-              ))}
+                    </motion.div>
+                  </CarouselItem>
+                ))
+              )}
             </CarouselContent>
             <CarouselPrevious className="hidden md:flex" />
             <CarouselNext className="hidden md:flex" />
