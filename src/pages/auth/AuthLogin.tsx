@@ -110,13 +110,13 @@ const AuthLogin: React.FC<AuthLoginProps> = ({ isAdmin = false }) => {
             </Link>
           </div>
 
-          {!isAdmin && (
+          {/* {!isAdmin && (
             <div className="mt-4 text-center">
               <Link to="/admin/login" className="text-sm text-muted-foreground hover:text-foreground">
                 Admin Login →
               </Link>
             </div>
-          )}
+          )} */}
         </div>
       </motion.div>
     </div>
