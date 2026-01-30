@@ -222,7 +222,8 @@ const RoomDetails: React.FC = () => {
                 )}
 
                 <p className="text-center text-sm text-muted-foreground mt-4">
-                  Taxes and fees calculated at checkout
+                  No online payment required. Pay conveniently at reception during check-in. <br />
+                  Taxes and fees calculated at checkout.
                 </p>
               </div>
             </div>

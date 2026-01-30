@@ -13,7 +13,7 @@ import { Badge } from '@/components/ui/badge';
 import { DataTable } from '@/components/tables/DataTable';
 import {
   Search,
-  Filter,
+  PlusCircle,
   Calendar,
   User,
   Building,
@@ -80,6 +80,14 @@ const AdminBookings: React.FC = () => {
     return matchesSearch && matchesStatus;
   }).sort((a, b) => new Date(b.checkIn).getTime() - new Date(a.checkIn).getTime());
 
+  const statusCounts = {
+    All: allBookings.length,
+    New: allBookings.filter(b => b.status === 'New').length,
+    Approved: allBookings.filter(b => b.status === 'Approved').length,
+    Cancelled: allBookings.filter(b => b.status === 'Cancelled').length,
+    Completed: allBookings.filter(b => b.status === 'Completed').length,
+  };
+
   const updateBookingStatus = (id: string, newStatus: string) => {
     updateStatusMutation.mutate({ id, status: newStatus });
   };
@@ -107,14 +115,6 @@ const AdminBookings: React.FC = () => {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-  };
-
-  const statusCounts = {
-    All: allBookings.length,
-    Pending: allBookings.filter(b => b.status === 'Pending').length,
-    Approved: allBookings.filter(b => b.status === 'Approved').length,
-    Cancelled: allBookings.filter(b => b.status === 'Cancelled').length,
-    Completed: allBookings.filter(b => b.status === 'Completed').length,
   };
 
   const containerVariants = {
@@ -203,7 +203,7 @@ const AdminBookings: React.FC = () => {
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              {(booking.status === 'Pending' || booking.status === 'New') && (
+              {(booking.status === 'New') && (
                 <>
                   <DropdownMenuItem className="gap-2 text-emerald-600 focus:text-emerald-700" onClick={() => updateBookingStatus(booking.id, 'Approved')}>
                     <CheckCircle className="w-4 h-4" />
@@ -280,13 +280,13 @@ const AdminBookings: React.FC = () => {
           >
             <Card className="border-border/50 hover:shadow-md h-full bg-card/60 backdrop-blur-sm">
               <CardContent className="p-4 flex flex-col items-center justify-center text-center space-y-2">
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center ${status === 'Pending' ? 'bg-amber-100 text-amber-600' :
+                <div className={`w-8 h-8 rounded-full flex items-center justify-center ${status === 'New' ? 'bg-violet-100 text-violet-600' :
                     status === 'Approved' ? 'bg-emerald-100 text-emerald-600' :
                       status === 'Cancelled' ? 'bg-rose-100 text-rose-600' :
                         status === 'Completed' ? 'bg-blue-100 text-blue-600' :
                           'bg-slate-100 text-slate-600'
                   }`}>
-                  {status === 'Pending' && <AlertCircle className="w-4 h-4" />}
+                  {status === 'New' && <PlusCircle className="w-4 h-4" />}
                   {status === 'Approved' && <CheckCircle className="w-4 h-4" />}
                   {status === 'Cancelled' && <XCircle className="w-4 h-4" />}
                   {status === 'Completed' && <Calendar className="w-4 h-4" />}

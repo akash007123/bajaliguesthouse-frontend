@@ -8,6 +8,7 @@ import {
   Edit, 
   Plus, 
   Eye, 
+  EllipsisVertical,
   Bed, 
   DollarSign, 
   Users, 
@@ -57,6 +58,8 @@ const AdminRooms: React.FC = () => {
   const [statusFilter, setStatusFilter] = useState('All');
   const [typeFilter, setTypeFilter] = useState('All');
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [roomToDelete, setRoomToDelete] = useState<Room | null>(null);
 
   const { data: rooms = [], isLoading } = useQuery<Room[]>({
     queryKey: ['adminRooms'],
@@ -458,31 +461,18 @@ const AdminRooms: React.FC = () => {
                                 <Edit className="w-3 h-3" />
                                 Edit
                               </Button>
-                              <AlertDialog>
-                                <AlertDialogTrigger asChild>
-                                  <Button size="sm" variant="destructive" className="gap-1">
-                                    <Trash2 className="w-3 h-3" />
-                                    Delete
-                                  </Button>
-                                </AlertDialogTrigger>
-                                <AlertDialogContent>
-                                  <AlertDialogHeader>
-                                    <AlertDialogTitle>Delete Room</AlertDialogTitle>
-                                    <AlertDialogDescription>
-                                      Are you sure you want to delete "{room.name}"? This action cannot be undone.
-                                    </AlertDialogDescription>
-                                  </AlertDialogHeader>
-                                  <AlertDialogFooter>
-                                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                    <AlertDialogAction 
-                                      onClick={() => deleteMutation.mutate(room.id)}
-                                      className="bg-rose-500 hover:bg-rose-600"
-                                    >
-                                      Delete
-                                    </AlertDialogAction>
-                                  </AlertDialogFooter>
-                                </AlertDialogContent>
-                              </AlertDialog>
+                              <Button
+                                size="sm"
+                                variant="destructive"
+                                className="gap-1"
+                                onClick={() => {
+                                  setRoomToDelete(room);
+                                  setDeleteDialogOpen(true);
+                                }}
+                              >
+                                <Trash2 className="w-3 h-3" />
+                                Delete
+                              </Button>
                             </div>
                           </div>
                         </CardContent>
@@ -599,7 +589,7 @@ const AdminRooms: React.FC = () => {
                                 <DropdownMenu>
                                   <DropdownMenuTrigger asChild>
                                     <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                                      <Eye className="w-4 h-4" />
+                                      <EllipsisVertical className="w-4 h-4" />
                                     </Button>
                                   </DropdownMenuTrigger>
                                   <DropdownMenuContent align="end">
@@ -629,13 +619,15 @@ const AdminRooms: React.FC = () => {
                                       )}
                                     </DropdownMenuItem>
                                     <DropdownMenuSeparator />
-                                    <DropdownMenuItem className="gap-2 text-rose-600">
-                                      <AlertDialogTrigger asChild>
-                                        <div className="flex items-center gap-2 cursor-pointer">
-                                          <Trash2 className="w-4 h-4" />
-                                          Delete Room
-                                        </div>
-                                      </AlertDialogTrigger>
+                                    <DropdownMenuItem
+                                      className="gap-2 text-rose-600"
+                                      onClick={() => {
+                                        setRoomToDelete(room);
+                                        setDeleteDialogOpen(true);
+                                      }}
+                                    >
+                                      <Trash2 className="w-4 h-4" />
+                                      Delete Room
                                     </DropdownMenuItem>
                                   </DropdownMenuContent>
                                 </DropdownMenu>

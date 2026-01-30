@@ -1,5 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { motion, Variants, AnimatePresence } from 'framer-motion';
+
+// Extend Window interface to include Instagram embed properties
+declare global {
+  interface Window {
+    instgrm?: {
+      Embeds: {
+        process: () => void;
+      };
+    };
+  }
+}
 import {
   Star,
   MapPin,
@@ -54,8 +65,8 @@ const About: React.FC = () => {
   const [openFaq, setOpenFaq] = useState<number | null>(0);
 
   useEffect(() => {
-    if ((window as any).instgrm) {
-      (window as any).instgrm.Embeds.process();
+    if (window.instgrm) {
+      window.instgrm.Embeds.process();
     } else {
       const script = document.createElement('script');
       script.src = "//www.instagram.com/embed.js";
