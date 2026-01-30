@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
 import { MapPin, Phone, Mail, Clock, Send } from 'lucide-react';
 import { useForm } from 'react-hook-form';
@@ -80,7 +81,23 @@ const Contact: React.FC = () => {
   };
 
   return (
-    <div>
+    <>
+      <Helmet>
+        <title>Contact Us | Get in Touch | Shri Balaji Home Stay</title>
+        <meta name="description" content="Contact Shri Balaji Home Stay for inquiries about your spiritual journey in Ujjain. Get assistance with temple visits, accommodations, and local guidance. Reach us 24/7." />
+        <meta name="keywords" content="contact Shri Balaji Home Stay, Ujjain accommodation inquiry, temple tour assistance, spiritual journey support, hotel contact Ujjain, pilgrimage accommodation, Ujjain homestay contact" />
+        <meta property="og:title" content="Contact Us | Get in Touch | Shri Balaji Home Stay" />
+        <meta property="og:description" content="Have questions about your spiritual journey in Ujjain? Contact Shri Balaji Home Stay for personalized assistance with temple visits and accommodations." />
+        <meta property="og:image" content="https://shribalajihomestay.in/icon.png" />
+        <meta property="og:url" content="https://shribalajihomestay.in/contact" />
+        <meta property="og:type" content="website" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Contact Us | Get in Touch | Shri Balaji Home Stay" />
+        <meta name="twitter:description" content="Contact Shri Balaji Home Stay for inquiries about your spiritual journey in Ujjain. Get assistance with temple visits and accommodations." />
+        <meta name="twitter:image" content="https://shribalajihomestay.in/icon.png" />
+        <link rel="canonical" href="https://shribalajihomestay.in/contact" />
+      </Helmet>
+      <div>
       {/* Header */}
       {/* Header */}
       <section className="relative h-[60vh] min-h-[500px] flex items-center justify-center overflow-hidden">
@@ -280,6 +297,7 @@ const Contact: React.FC = () => {
         </div>
       </section>
     </div>
+    </>
   );
 };
 

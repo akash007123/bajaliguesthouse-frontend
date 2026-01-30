@@ -1,4 +1,5 @@
 import React, { useRef, useState } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import { motion, useScroll, useTransform, AnimatePresence, Variants } from 'framer-motion';
 import {
@@ -105,7 +106,23 @@ const Home: React.FC = () => {
   };
 
   return (
-    <div ref={containerRef} className="relative w-full overflow-x-hidden bg-background">
+    <>
+      <Helmet>
+        <title>Shri Balaji Home Stay | Luxury Homestay in Ujjain | Spiritual Retreat Near Mahakaleshwar Temple</title>
+        <meta name="description" content="Experience divine luxury at Shri Balaji Home Stay in Ujjain. Premium homestay accommodation near Mahakaleshwar Temple with spiritual ambiance, modern amenities, and authentic hospitality. Book your sacred journey today." />
+        <meta name="keywords" content="Shri Balaji Home Stay Ujjain, luxury homestay Ujjain, spiritual retreat Ujjain, Mahakaleshwar Temple accommodation, pilgrim stay Ujjain, authentic Indian hospitality, premium homestay Madhya Pradesh, divine luxury stay" />
+        <meta property="og:title" content="Shri Balaji Home Stay | Luxury Homestay in Ujjain | Spiritual Retreat Near Mahakaleshwar Temple" />
+        <meta property="og:description" content="Discover unparalleled luxury and spiritual peace at Shri Balaji Home Stay. Located near Mahakaleshwar Temple in Ujjain, offering premium accommodations for your divine journey." />
+        <meta property="og:image" content="https://shribalajihomestay.in/icon.png" />
+        <meta property="og:url" content="https://shribalajihomestay.in/" />
+        <meta property="og:type" content="website" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Shri Balaji Home Stay | Luxury Homestay in Ujjain | Spiritual Retreat Near Mahakaleshwar Temple" />
+        <meta name="twitter:description" content="Experience divine luxury at Shri Balaji Home Stay in Ujjain. Premium homestay accommodation near Mahakaleshwar Temple with spiritual ambiance and modern amenities." />
+        <meta name="twitter:image" content="https://shribalajihomestay.in/icon.png" />
+        <link rel="canonical" href="https://shribalajihomestay.in/" />
+      </Helmet>
+      <div ref={containerRef} className="relative w-full overflow-x-hidden bg-background">
 
       {/* --- HERO SECTION --- */}
       <section ref={heroRef} className="relative h-screen min-h-[700px] flex items-center justify-center overflow-hidden">
@@ -589,7 +606,7 @@ const Home: React.FC = () => {
       </section>
 
     </div>
-  );
+  </>);
 };
 
 export default Home;

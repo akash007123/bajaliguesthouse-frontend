@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useForm } from 'react-hook-form';
@@ -54,7 +55,23 @@ const AuthLogin: React.FC<AuthLoginProps> = ({ isAdmin = false }) => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-muted py-12 px-4">
+    <>
+      <Helmet>
+        <title>Login | Sign In | Shri Balaji Home Stay</title>
+        <meta name="description" content="Sign in to your account at Shri Balaji Home Stay in Ujjain. Access your bookings and manage your spiritual retreat near Mahakaleshwar Temple." />
+        <meta name="keywords" content="login Shri Balaji Home Stay, sign in Ujjain homestay, user login, admin login, spiritual retreat access, Mahakaleshwar Temple stay" />
+        <meta property="og:title" content="Login | Sign In | Shri Balaji Home Stay" />
+        <meta property="og:description" content="Access your Shri Balaji Home Stay account. Sign in to manage bookings and enjoy premium hospitality in Ujjain." />
+        <meta property="og:image" content="https://shribalajihomestay.in/icon.png" />
+        <meta property="og:url" content="https://shribalajihomestay.in/login" />
+        <meta property="og:type" content="website" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Login | Sign In | Shri Balaji Home Stay" />
+        <meta name="twitter:description" content="Sign in to Shri Balaji Home Stay for seamless booking management and spiritual experiences." />
+        <meta name="twitter:image" content="https://shribalajihomestay.in/icon.png" />
+        <link rel="canonical" href="https://shribalajihomestay.in/login" />
+      </Helmet>
+      <div className="min-h-screen flex items-center justify-center bg-muted py-12 px-4">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -120,7 +137,8 @@ const AuthLogin: React.FC<AuthLoginProps> = ({ isAdmin = false }) => {
         </div>
       </motion.div>
     </div>
-  );
+  </>
+);
 };
 
 export const UserLogin = () => <AuthLogin isAdmin={false} />;

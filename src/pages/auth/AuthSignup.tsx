@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useForm } from 'react-hook-form';
@@ -51,7 +52,23 @@ const AuthSignup: React.FC<AuthSignupProps> = ({ isAdmin = false }) => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-muted py-12 px-4">
+    <>
+      <Helmet>
+        <title>Sign Up | Create Account | Shri Balaji Home Stay</title>
+        <meta name="description" content="Create your account at Shri Balaji Home Stay in Ujjain. Register for exclusive access to book luxury accommodations near Mahakaleshwar Temple and enjoy spiritual hospitality." />
+        <meta name="keywords" content="sign up Shri Balaji Home Stay, create account Ujjain homestay, register luxury accommodation, user registration Ujjain, spiritual retreat booking, Mahakaleshwar Temple stay" />
+        <meta property="og:title" content="Sign Up | Create Account | Shri Balaji Home Stay" />
+        <meta property="og:description" content="Join Shri Balaji Home Stay community. Create your account to book premium accommodations and experience authentic hospitality in Ujjain." />
+        <meta property="og:image" content="https://shribalajihomestay.in/icon.png" />
+        <meta property="og:url" content="https://shribalajihomestay.in/signup" />
+        <meta property="og:type" content="website" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Sign Up | Create Account | Shri Balaji Home Stay" />
+        <meta name="twitter:description" content="Register at Shri Balaji Home Stay for exclusive booking access to luxury accommodations near Mahakaleshwar Temple." />
+        <meta name="twitter:image" content="https://shribalajihomestay.in/icon.png" />
+        <link rel="canonical" href="https://shribalajihomestay.in/signup" />
+      </Helmet>
+      <div className="min-h-screen flex items-center justify-center bg-muted py-12 px-4">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -113,7 +130,8 @@ const AuthSignup: React.FC<AuthSignupProps> = ({ isAdmin = false }) => {
         </div>
       </motion.div>
     </div>
-  );
+  </>
+);
 };
 
 export const UserSignup = () => <AuthSignup isAdmin={false} />;

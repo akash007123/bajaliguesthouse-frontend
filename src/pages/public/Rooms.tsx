@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { motion, useScroll, useTransform, Variants } from 'framer-motion';
 import { Filter, Search } from 'lucide-react';
 import { RoomCard } from '@/components/common/RoomCard';
@@ -305,10 +306,27 @@ const Rooms: React.FC = () => {
   );
 
   return (
-    <div>
-      {headerSection}
-      {isLoading ? loadingFiltersAndRooms : normalFiltersAndRooms}
-    </div>
+    <>
+      <Helmet>
+        <title>Rooms & Suites | Shri Balaji Home Stay | Luxury Accommodation in Ujjain</title>
+        <meta name="description" content="Explore our premium rooms and suites at Shri Balaji Home Stay in Ujjain. From deluxe to presidential suites, enjoy authentic Indian hospitality with modern amenities near Mahakaleshwar Temple. Book your spiritual retreat today." />
+        <meta name="keywords" content="rooms Ujjain, luxury suites Ujjain, homestay rooms Madhya Pradesh, deluxe rooms Ujjain, presidential suite Ujjain, accommodation Mahakaleshwar Temple, spiritual retreat rooms, authentic Indian hospitality rooms" />
+        <meta property="og:title" content="Rooms & Suites | Shri Balaji Home Stay | Luxury Accommodation in Ujjain" />
+        <meta property="og:description" content="Discover our exquisite collection of rooms and suites at Shri Balaji Home Stay. Experience luxury accommodation with traditional Indian hospitality in the heart of Ujjain." />
+        <meta property="og:image" content="https://shribalajihomestay.in/icon.png" />
+        <meta property="og:url" content="https://shribalajihomestay.in/rooms" />
+        <meta property="og:type" content="website" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Rooms & Suites | Shri Balaji Home Stay | Luxury Accommodation in Ujjain" />
+        <meta name="twitter:description" content="Explore premium rooms and suites at Shri Balaji Home Stay. Luxury accommodation with authentic hospitality near Mahakaleshwar Temple in Ujjain." />
+        <meta name="twitter:image" content="https://shribalajihomestay.in/icon.png" />
+        <link rel="canonical" href="https://shribalajihomestay.in/rooms" />
+      </Helmet>
+      <div>
+        {headerSection}
+        {isLoading ? loadingFiltersAndRooms : normalFiltersAndRooms}
+      </div>
+    </>
   );
 };
 

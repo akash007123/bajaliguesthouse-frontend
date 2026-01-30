@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -25,8 +26,23 @@ const UjjainDarshan: React.FC = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50">
-      {/* Hero Section */}
+    <>
+      <Helmet>
+        <title>Ujjain Darshan | Sacred Temples & Spiritual Sites | Shri Balaji Home Stay</title>
+        <meta name="description" content="Explore Ujjain's sacred darshan sites including Mahakaleshwar Temple, Ram Ghat, and Kal Bhairav Temple. Experience divine spirituality and ancient heritage with guided temple tours from Shri Balaji Home Stay." />
+        <meta name="keywords" content="Ujjain darshan, Mahakaleshwar Temple, Ram Ghat, Kal Bhairav Temple, sacred sites Ujjain, temple tours Ujjain, spiritual pilgrimage, Jyotirlinga temples, Shipra River ghats, Hindu temples Madhya Pradesh" />
+        <meta property="og:title" content="Ujjain Darshan | Sacred Temples & Spiritual Sites | Shri Balaji Home Stay" />
+        <meta property="og:description" content="Discover the divine darshan of Ujjain's most sacred temples and spiritual sites. Experience Mahakaleshwar Temple and other holy places with authentic hospitality." />
+        <meta property="og:image" content="https://shribalajihomestay.in/icon.png" />
+        <meta property="og:url" content="https://shribalajihomestay.in/ujjain-darshan" />
+        <meta property="og:type" content="website" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Ujjain Darshan | Sacred Temples & Spiritual Sites | Shri Balaji Home Stay" />
+        <meta name="twitter:description" content="Explore Ujjain's sacred darshan sites including Mahakaleshwar Temple and other divine spiritual locations with guided tours." />
+        <meta name="twitter:image" content="https://shribalajihomestay.in/icon.png" />
+        <link rel="canonical" href="https://shribalajihomestay.in/ujjain-darshan" />
+      </Helmet>
+      <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50">
       {/* Hero Section */}
       <section className="relative h-[70vh] min-h-[600px] flex items-center justify-center overflow-hidden">
         {/* Background */}
@@ -249,7 +265,8 @@ const UjjainDarshan: React.FC = () => {
         </div>
       </section>
     </div>
-  );
+  </>
+);
 };
 
 export default UjjainDarshan;
